@@ -1,0 +1,4 @@
+Based mostly on http://blog.zacharyvoase.com/2010/02/03/django-project-conventions/
+#set outseide to define deploy environ
+#os.environ.setdefault("DJANGO_SETTINGS_MODULE", "vcf_server2.settings")
+
