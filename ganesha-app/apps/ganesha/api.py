@@ -1,42 +1,149 @@
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
+from tastypie.authorization import Authorization
+from tastypie.authentication import Authentication
 from tastypie.api import Api
 from tastypie import fields
-from ganesha.models import Study, Sample, StudyContext, Location
+from types import NoneType
+from ganesha.models import Study, Sample, SampleContext, Location, ContactPerson, Affiliation, Institute
 
+######### Inline field defs ########
+
+class ToManyFieldInlineToggle(fields.ToManyField):
+    def dehydrate_related(self, bundle, related_resource):
+        try:
+            isInline = bundle.request.GET.get('inline')
+            if isInline not in [ 'true', 'True', True]:
+                return related_resource.get_resource_uri(bundle)
+        # bundle.request is None
+        except NoneType:
+            pass
+
+        # Default non-nested behavior
+        bundle = related_resource.build_bundle(obj=related_resource.instance, request=bundle.request)
+        return related_resource.full_dehydrate(bundle)
+
+class ForeignKeyInlineToggle(fields.ForeignKey):
+    def dehydrate_related(self, bundle, related_resource):
+        try:
+            isInline = bundle.request.GET.get('inline')
+            if isInline not in [ 'true', 'True', True]:
+                return related_resource.get_resource_uri(bundle)
+        # bundle.request is None
+        except NoneType:
+            pass
+
+        # Default non-nested behavior
+        bundle = related_resource.build_bundle(obj=related_resource.instance, request=bundle.request)
+        return related_resource.full_dehydrate(bundle)
+
+######### Resource definitions ########
+
+class InstituteResource(ModelResource):
+    class Meta:
+        queryset = Institute.objects.all()
+        authentication = Authentication()
+        authorization = Authorization()
+
+class AffiliationResource(ModelResource):
+    institute = fields.ForeignKey(InstituteResource, 'institute',)
+    class Meta:
+        queryset = Affiliation.objects.select_related('institute').all()
+        authentication = Authentication()
+        authorization = Authorization()
+
+class ContactPersonResource(ModelResource):
+#affiliations = fields.ToManyField(AffiliationResource, attribute=lambda bundle: bundle.obj.affiliations.through.objects.filter(
+#contact_person=bundle.obj) or bundle.obj.affiliations, full=True)
+    affiliations = fields.ToManyField(AffiliationResource, 'affiliations', full=True)
+    def save_m2m(self, bundle):
+        related_mngr = getattr(bundle.obj, self.fields['affiliations'].attribute)
+        if hasattr(related_mngr, 'clear'):
+            # Clear it out, just to be safe.
+            related_mngr.clear()
+        related_objs = []
+        for related_bundle in bundle.data['affiliations']:
+            related_bundle.obj.contact_person = bundle.obj
+            related_bundle.obj.save()
+            related_objs.append(related_bundle.obj)
+        print related_mngr
+        #related_mngr.add(*related_objs)
+
+    class Meta:
+        resource_name = 'contact_person'
+        queryset = ContactPerson.objects.prefetch_related('affiliations').all()
+        authentication = Authentication()
+        authorization = Authorization()
 
 class StudyResource(ModelResource):
+    contact_persons = ToManyFieldInlineToggle(ContactPersonResource, 'contact_persons')
     class Meta:
-        queryset = Study.objects.all()
+        queryset = Study.objects.prefetch_related('contact_persons').all()
+        filtering = {
+            'study': ALL,
+            'legacy_name': ALL,
+            'description': ALL,
+            'alfreseco_node': ALL,
+            'people': ALL,
+            'contact_persons': ALL_WITH_RELATIONS
+            }
+        authentication = Authentication()
+        authorization = Authorization()
 
 class LocationResource(ModelResource):
     class Meta:
         queryset = Location.objects.all()
         filtering = {
+            'location': ALL,
+            'name': ALL,
+            'longit': ALL,
+            'lattit': ALL,
             'country': ALL,
-            }
+        }
+        authentication = Authentication()
+        authorization = Authorization()
 
-class StudyContextResource(ModelResource):
-    location_id = fields.ForeignKey(LocationResource, 'location_id', full=True)
+class SampleContextResource(ModelResource):
+    study = ForeignKeyInlineToggle(StudyResource, 'study',)
+    location = ForeignKeyInlineToggle(LocationResource, 'location',)
     class Meta:
         resource_name = 'study_context'
-        queryset = StudyContext.objects.all()
+        queryset = SampleContext.objects.select_related('study', 'location').all()
         filtering = {
-            'location_id': ALL_WITH_RELATIONS,
+            'study_context': ALL,
+            'title': ALL,
+            'description': ALL,
+            'study': ALL_WITH_RELATIONS,
+            'location': ALL_WITH_RELATIONS,
             }
-
+        authentication = Authentication()
+        authorization = Authorization()
 
 class SampleResource(ModelResource):
-    study_context_id = fields.ForeignKey(StudyContextResource, 'study_context_id', full=True)
+    study_context = ForeignKeyInlineToggle(SampleContextResource, 'study_context')
+    #    country = ForeignKeyInlineToggle('SampleSetResource', 'country')
+    #    population = ForeignKeyInlineToggle('SampleSetResource', 'population')
     class Meta:
-        queryset = Sample.objects.all()
+        queryset = Sample.objects.select_related('study_context', 'country', 'population').all()
         filtering = {
-            'study_context_id': ALL_WITH_RELATIONS,
+            'sample': ALL,
+            'country': ALL_WITH_RELATIONS,
+            'population': ALL_WITH_RELATIONS,
+            'is_public': ALL,
+            'study_context': ALL_WITH_RELATIONS,
             }
+        authentication = Authentication()
+        authorization = Authorization()
+
+
+
 
 
 
 v1_api = Api(api_name='v1')
+v1_api.register(InstituteResource())
+v1_api.register(AffiliationResource())
+v1_api.register(ContactPersonResource())
 v1_api.register(StudyResource())
-v1_api.register(StudyContextResource())
+v1_api.register(SampleContextResource())
 v1_api.register(SampleResource())
 v1_api.register(LocationResource())

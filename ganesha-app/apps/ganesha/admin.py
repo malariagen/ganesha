@@ -1,10 +1,10 @@
 from django.contrib import admin
-from ganesha.models import Sample, Study, Location, StudyContext, ContactPerson, Affiliation, Institute, SampleSetType, SampleSet, Gene, Locus, LocusVariant, LocusFrequency, SNP, SNPFrequency
+from ganesha.models import Sample, Study, Location, SampleContext, ContactPerson, Affiliation, Institute, SampleSetType, SampleSet, Gene, Locus, LocusVariant, LocusFrequency, SNP, SNPFrequency
 
 admin.site.register(Study)
 admin.site.register(Sample)
 admin.site.register(Location)
-admin.site.register(StudyContext)
+admin.site.register(SampleContext)
 admin.site.register(Affiliation)
 admin.site.register(Institute)
 admin.site.register(ContactPerson)
