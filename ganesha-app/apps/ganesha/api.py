@@ -45,28 +45,26 @@ class InstituteResource(ModelResource):
         authorization = Authorization()
 
 class AffiliationResource(ModelResource):
-    institute = fields.ForeignKey(InstituteResource, 'institute',)
+    institute = ForeignKeyInlineToggle(InstituteResource, 'institute')
     class Meta:
         queryset = Affiliation.objects.select_related('institute').all()
         authentication = Authentication()
         authorization = Authorization()
 
 class ContactPersonResource(ModelResource):
-#affiliations = fields.ToManyField(AffiliationResource, attribute=lambda bundle: bundle.obj.affiliations.through.objects.filter(
-#contact_person=bundle.obj) or bundle.obj.affiliations, full=True)
-    affiliations = fields.ToManyField(AffiliationResource, 'affiliations', full=True)
+    affiliations = ToManyFieldInlineToggle(AffiliationResource, attribute=lambda bundle: bundle.obj.affiliations.through.objects.filter(
+contact_person=bundle.obj) or bundle.obj.affiliations)
+    #affiliations = fields.ToManyField(AffiliationResource, 'affiliations')
     def save_m2m(self, bundle):
-        related_mngr = getattr(bundle.obj, self.fields['affiliations'].attribute)
+        related_mngr = getattr(bundle.obj, 'affiliations')
         if hasattr(related_mngr, 'clear'):
             # Clear it out, just to be safe.
             related_mngr.clear()
-        related_objs = []
         for related_bundle in bundle.data['affiliations']:
+            related_bundle.obj.institute.save()
+            related_bundle.obj.institute = related_bundle.obj.institute
             related_bundle.obj.contact_person = bundle.obj
             related_bundle.obj.save()
-            related_objs.append(related_bundle.obj)
-        print related_mngr
-        #related_mngr.add(*related_objs)
 
     class Meta:
         resource_name = 'contact_person'

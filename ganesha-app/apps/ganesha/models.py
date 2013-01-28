@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import CharField, BooleanField, ForeignKey, TextField, URLField, SlugField, ManyToManyField, FloatField, EmailField, IntegerField, AutoField
-from ganesha.util import iso_countries
+from ganesha.util import iso_countries, slugify
 
 ########### CORE ##########
 
@@ -52,15 +52,20 @@ class SampleContext(models.Model):
 ######### COMMUNITY #######
 
 class ContactPerson(models.Model):
-    contact_person = AutoField(primary_key=True)
+    contact_person = SlugField(primary_key=True)
     email = EmailField()
     name = CharField(max_length=100)
     description = TextField()
     affiliations = ManyToManyField('Institute', through='Affiliation')
+    def save(self, **kwargs):
+        if not self.contact_person:
+            slugify.unique_slugify(self, self.name, slug_field_name='contact_person')
+        super(ContactPerson, self).save()
     def __unicode__(self):
         return self.name
     class Meta:
         db_table = 'contact_persons'
+        unique_together = (('email',),)
 
 
 class Affiliation(models.Model):
@@ -68,14 +73,22 @@ class Affiliation(models.Model):
     institute = ForeignKey('Institute')
     contact_person = ForeignKey('ContactPerson')
     url = URLField(blank=True, help_text='Individuals profile at this insistution')
+    def __unicode__(self):
+        return unicode(self.contact_person)+' - '+unicode(self.institute)
     class Meta:
         db_table = 'affiliations'
         unique_together = (('institute', 'contact_person'),)
 
 class Institute(models.Model):
-    institute = AutoField(primary_key=True)
+    institute = SlugField(primary_key=True)
     name = CharField(max_length=100)
+    def save(self, **kwargs):
+        if not self.institute:
+            slugify.unique_slugify(self, self.name, slug_field_name='institute')
+        super(Institute, self).save()
     #FK from affiliation
+    def __unicode__(self):
+        return self.name
     class Meta:
         db_table = 'institutes'
 
