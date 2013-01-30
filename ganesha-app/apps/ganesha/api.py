@@ -103,11 +103,12 @@ class LocationResource(ModelResource):
 class SampleContextResource(ModelResource):
     study = ForeignKeyInlineToggle(StudyResource, 'study',)
     location = ForeignKeyInlineToggle(LocationResource, 'location',)
+    samples = fields.ToManyField('ganesha.api.SampleResource', 'sample_set', related_name='sample_context')
     class Meta:
-        resource_name = 'study_context'
+        resource_name = 'sample_context'
         queryset = SampleContext.objects.select_related('study', 'location').all()
         filtering = {
-            'study_context': ALL,
+            'sample_context': ALL,
             'title': ALL,
             'description': ALL,
             'study': ALL_WITH_RELATIONS,
@@ -117,17 +118,17 @@ class SampleContextResource(ModelResource):
         authorization = Authorization()
 
 class SampleResource(ModelResource):
-    study_context = ForeignKeyInlineToggle(SampleContextResource, 'study_context')
+    sample_context = ForeignKeyInlineToggle(SampleContextResource, 'sample_context')
     #    country = ForeignKeyInlineToggle('SampleSetResource', 'country')
     #    population = ForeignKeyInlineToggle('SampleSetResource', 'population')
     class Meta:
-        queryset = Sample.objects.select_related('study_context', 'country', 'population').all()
+        queryset = Sample.objects.select_related('sample_context', 'country', 'population').all()
         filtering = {
             'sample': ALL,
             'country': ALL_WITH_RELATIONS,
             'population': ALL_WITH_RELATIONS,
             'is_public': ALL,
-            'study_context': ALL_WITH_RELATIONS,
+            'sample_context': ALL_WITH_RELATIONS,
             }
         authentication = Authentication()
         authorization = Authorization()

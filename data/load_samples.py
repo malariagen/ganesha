@@ -4,6 +4,7 @@ import requests
 import sys
 from django.template.defaultfilters import slugify
 from urlparse import urlparse
+import pprint
 
 HOST = 'http://localhost:8000'
 API = '/api/v1'
@@ -14,6 +15,9 @@ def post(object, data):
                #'Authorization': 'ApiKey ben:204db7bcfafb2deb7506b89eb3b9b715b09905c8'
     }
     r = requests.post(HOST + API + '/' + object + '/', data=json.dumps(data), headers=headers)
+    pprint.pprint(json.dumps(data))
+    if r.text:
+        print r.text
     r.raise_for_status()
     return urlparse(r.headers['Location']).path
 
@@ -70,16 +74,17 @@ unknown_location = post('location', {
 
 wanted_legacy_studies = set()
 for line in Reader('metadata-2.2_withsites.txt'):
-    wanted_legacy_studies.add(line['Study'])
+    if line['Exclude'] != 'TRUE':
+        wanted_legacy_studies.add(line['Study'])
 
 studies = []
 contact_persons_by_name = {}
 institutes_by_name = {}
-
+studies_by_legacy_name = {}
 af = json.load(open('alfresco121218.json'))
 for af_study in af['collaborationNodes']:
     for legacy_study in wanted_legacy_studies:
-        if legacy_study in af_study['title']:
+        if legacy_study == af_study['title'].split(' ')[0]:
             print legacy_study, af_study['name']
             study_contacts = []
             for af_contact in af_study['contacts']:
@@ -108,29 +113,30 @@ for af_study in af['collaborationNodes']:
                      'people': '',
                      'contact_persons': study_contacts
             }
-            post('study', study)
+            studies_by_legacy_name[legacy_study] = post('study', study)
 
 sample_contexts_by_id = {}
-for line in Reader('metadata-2.0.2_withsites.txt'):
-    sample_context_id = line['Study'] + '_' + line['Site']
-    if line['LabSample'] == 'TRUE':
-        sample_context_id = line['Study'] + '_' + 'LAB_Lab_Sample'
-    if not line['Site']:
-        sample_context_id = line['Study'] + '_' + '??_Unknown'
-    sample_context = sample_contexts_by_id.get(sample_context_id, None)
-    if not sameple_context:
-        sample_context = {
-            'sample_context': sample_context_id,
-            'title': ' '.join(sample_context_id.split('_')[1:]),
-            'description': paul_id_to_desc.get(line['Site'], ''),
-            'location': paul_id_to_location.get(line['Site'], unknown_location),
-            'study': line['Study']
-        }
-        sample_contexts_by_id[sample_context_id] = sample_context
-    sample_context['samples'].append({
-        'ox_code': line['Sample'],
-        'excluded': line['Exclude'] == 'TRUE',
-        'year': line['Year'],
+for line in Reader('metadata-2.2_withsites.txt'):
+    if line['Exclude'] != 'TRUE':
+        sample_context_id = line['Study'] + '_' + line['SiteCode']
+        if line['LabSample'] == 'TRUE':
+            sample_context_id = line['Study'] + '_' + 'LAB_Lab_Sample'
+        if not line['Site']:
+            sample_context_id = line['Study'] + '_' + 'XX_Unknown'
+        sample_context = sample_contexts_by_id.get(sample_context_id, None)
+        if not sample_context:
+            sample_context = {
+                'sample_context': sample_context_id,
+                'title': ' '.join(sample_context_id.split('_')[1:]),
+                'description': paul_id_to_desc.get(line['Site'], ''),
+                'location': paul_id_to_location.get(line['SiteCode'], unknown_location),
+                'study': studies_by_legacy_name[line['Study']],
+                'samples': []
+            }
+            sample_contexts_by_id[sample_context_id] = sample_context
+        sample_context['samples'].append({
+            'sample': line['Sample'],
+            'is_public': False,
     })
 for sample_context in sample_contexts_by_id.values():
-    #SAVE
+    post('sample_context', sample_context)

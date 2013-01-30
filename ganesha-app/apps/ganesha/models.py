@@ -6,8 +6,8 @@ from ganesha.util import iso_countries, slugify
 
 class Sample(models.Model):
     sample = SlugField(max_length=20, primary_key=True, help_text='ox_code')
-    country = ForeignKey('SampleSet', limit_choices_to={'sample_set_type__exact':'country'}, related_name='sample_set_country')
-    population = ForeignKey('SampleSet', limit_choices_to={'sample_set_type__exact':'population'}, related_name='sample_set_population')
+    country = ForeignKey('SampleSet', limit_choices_to={'sample_set_type__exact':'country'}, related_name='sample_set_country', null=True)
+    population = ForeignKey('SampleSet', limit_choices_to={'sample_set_type__exact':'population'}, related_name='sample_set_population', null=True)
     is_public = BooleanField(default=False, help_text='True if this sample has public genotypes')
     sample_context = ForeignKey('SampleContext')
     class Meta:
@@ -46,6 +46,7 @@ class SampleContext(models.Model):
     description = TextField()
     study = ForeignKey('Study')
     location = ForeignKey('Location')
+    #Fk From Sample
     class Meta:
         db_table = 'sample_contexts'
 
@@ -65,8 +66,6 @@ class ContactPerson(models.Model):
         return self.name
     class Meta:
         db_table = 'contact_persons'
-        unique_together = (('email',),)
-
 
 class Affiliation(models.Model):
     affiliation = AutoField(primary_key=True)
