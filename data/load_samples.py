@@ -68,7 +68,7 @@ unknown_location = post('location', {
     'name': 'Unknown',
     'lattit': None,
     'longit': None,
-    'country': None,
+    'country': 'XX',
     #'sub-continent': line['SubCont'],
 })
 

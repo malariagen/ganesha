@@ -14,7 +14,6 @@ class Sample(models.Model):
         db_table = 'samples'
 
 ############ STUDIES ETC ######
-
 class Study(models.Model):
     study = SlugField(primary_key=True, help_text='Long form name as in alfresco')
     title = CharField(max_length=200)
@@ -23,6 +22,7 @@ class Study(models.Model):
     alfresco_node = CharField(max_length=255, help_text='Alfresco workspace:// URL')
     people = TextField(help_text='Comma seperated list of names')
     contact_persons = ManyToManyField('ContactPerson')
+    full_study = BooleanField(default=True, help_text='True if this study has a meaningful independent scientific context')
     def __unicode__(self):
         return self.study
     #FK from sample_contexts
@@ -37,8 +37,11 @@ class Location(models.Model):
     lattit = FloatField(null=True)
     country = SlugField(choices=iso_countries.id_name_tuples)
     #FK from StudyContext
+    def __unicode__(self):
+        return self.country+', '+self.name
     class Meta:
         db_table = 'locations'
+        ordering = ['country', 'name']
 
 class SampleContext(models.Model):
     sample_context = SlugField(primary_key=True)
@@ -47,6 +50,8 @@ class SampleContext(models.Model):
     study = ForeignKey('Study')
     location = ForeignKey('Location')
     #Fk From Sample
+    def __unicode__(self):
+        return self.sample_context
     class Meta:
         db_table = 'sample_contexts'
 
