@@ -6,6 +6,7 @@ from django.template.defaultfilters import slugify
 from urlparse import urlparse
 import pprint
 
+
 HOST = 'http://localhost:8000'
 API = '/api/v1'
 
@@ -15,7 +16,7 @@ def post(object, data):
                #'Authorization': 'ApiKey ben:204db7bcfafb2deb7506b89eb3b9b715b09905c8'
     }
     r = requests.post(HOST + API + '/' + object + '/', data=json.dumps(data), headers=headers)
-    pprint.pprint(json.dumps(data))
+    #pprint.pprint(json.dumps(data))
     if r.text:
         print r.text
     r.raise_for_status()
@@ -85,7 +86,6 @@ af = json.load(open('alfresco121218.json'))
 for af_study in af['collaborationNodes']:
     for legacy_study in wanted_legacy_studies:
         if legacy_study == af_study['title'].split(' ')[0]:
-            print legacy_study, af_study['name']
             study_contacts = []
             for af_contact in af_study['contacts']:
                 name = ' '.join([af_contact['firstName'], af_contact['lastName']])
@@ -127,7 +127,7 @@ for line in Reader('metadata-2.2_withsites.txt'):
         if not sample_context:
             sample_context = {
                 'sample_context': sample_context_id,
-                'title': ' '.join(sample_context_id.split('_')[1:]),
+                'title': ' '.join(sample_context_id.split('_')[2:]),
                 'description': paul_id_to_desc.get(line['Site'], ''),
                 'location': paul_id_to_location.get(line['SiteCode'], unknown_location),
                 'study': studies_by_legacy_name[line['Study']],
