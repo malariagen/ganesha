@@ -3,12 +3,10 @@ from django.db.models import CharField, BooleanField, ForeignKey, TextField, URL
 from ganesha.util import iso_countries, slugify
 
 ########### CORE ##########
-
 class Sample(models.Model):
     sample = SlugField(max_length=20, primary_key=True, help_text='ox_code')
     is_public = BooleanField(default=False, help_text='True if this sample has public genotypes')
     sample_context = ForeignKey('SampleContext')
-
     class Meta:
         db_table = 'samples'
 
@@ -20,13 +18,11 @@ class Study(models.Model):
     description = TextField(blank=True)
     alfresco_node = CharField(max_length=255, help_text='Alfresco workspace:// URL')
     people = TextField(help_text='Comma seperated list of names', blank=True)
-    contact_persons = ManyToManyField('ContactPerson', through='StudyContactPerson')
+    contact_persons = ManyToManyField('ContactPerson')
     full_study = BooleanField(default=True,
                               help_text='True if this study has a meaningful independent scientific context')
-
     def __unicode__(self):
         return self.study
-
     #FK from sample_contexts
     class Meta:
         db_table = 'studies'
@@ -42,7 +38,6 @@ class Location(models.Model):
     #FK from StudyContext
     def __unicode__(self):
         return self.country + ', ' + self.name
-
     class Meta:
         db_table = 'locations'
         ordering = ['country', 'name']
@@ -57,7 +52,6 @@ class SampleContext(models.Model):
     #Fk From Sample
     def __unicode__(self):
         return self.sample_context
-
     class Meta:
         db_table = 'sample_contexts'
         ordering = ['sample_context']
@@ -70,84 +64,73 @@ class ContactPerson(models.Model):
     name = CharField(max_length=100)
     description = TextField()
     affiliations = ManyToManyField('Institute', through='Affiliation')
-
     def save(self, **kwargs):
         if not self.contact_person:
             slugify.unique_slugify(self, self.name, slug_field_name='contact_person')
         super(ContactPerson, self).save()
-
     def __unicode__(self):
         return self.name
-
     class Meta:
         db_table = 'contact_persons'
-
 
 class StudyContactPerson(models.Model):
     study = ForeignKey('Study')
     contactperson = ForeignKey('ContactPerson')
-
     class Meta:
         db_table = 'studies_contact_persons'
-
+        managed = False
 
 class Affiliation(models.Model):
     affiliation = AutoField(primary_key=True)
     institute = ForeignKey('Institute')
     contact_person = ForeignKey('ContactPerson')
     url = URLField(blank=True, help_text='Individuals profile at this insistution')
-
     def __unicode__(self):
         return unicode(self.contact_person) + ' - ' + unicode(self.institute)
-
     class Meta:
         db_table = 'affiliations'
         unique_together = (('institute', 'contact_person'),)
 
-
 class Institute(models.Model):
     institute = SlugField(primary_key=True)
     name = CharField(max_length=100)
-
     def save(self, **kwargs):
         if not self.institute:
             slugify.unique_slugify(self, self.name, slug_field_name='institute')
         super(Institute, self).save()
-
     #FK from affiliation
     def __unicode__(self):
         return self.name
-
     class Meta:
         db_table = 'institutes'
 
 ######### SAMPLE SETS #########
-
-class SampleSetType(models.Model):
-    sample_set_type = SlugField(primary_key=True)
+class SampleClassificationType(models.Model):
+    sample_classification_type = SlugField(primary_key=True)
     name = CharField(max_length=100)
-    #FK from SampleSet
+    description = TextField()
+    #FK from SampleClassification
+    def save(self, **kwargs):
+        if not self.sample_classification_type:
+            slugify.unique_slugify(self, self.name, slug_field_name='sample_classification_type')
+        super(SampleClassificationType, self).save()
     def __unicode__(self):
         return self.name
-
     class Meta:
-        db_table = 'sample_set_types'
+        db_table = 'sample_classification_types'
 
-
-class SampleSet(models.Model):
-    sample_set = SlugField(primary_key=True)
-    sample_set_type = ForeignKey('SampleSetType')
+class SampleClassification(models.Model):
+    sample_classification = SlugField(primary_key=True)
+    sample_classification_type = ForeignKey('SampleClassificationType')
     name = CharField(max_length=100)
-    longit = FloatField(null=True)
     lattit = FloatField(null=True)
+    longit = FloatField(null=True)
     geo_json = TextField(blank=True, help_text='GeoJson for drawing region if applicable')
     samples = ManyToManyField('Sample')
-
     def __unicode__(self):
-        return self.name
-
+        return unicode(self.sample_classification_type) + ' ' + self.name
     class Meta:
-        db_table = 'sample_sets'
+        db_table = 'sample_classifications'
 
 ######### RESISTANCE MARKERS ######
 class Gene(models.Model):
@@ -156,10 +139,8 @@ class Gene(models.Model):
     order = IntegerField(help_text='Detemines display ordering')
     name = CharField(max_length=100)
     description = TextField()
-
     class Meta:
         db_table = 'genes'
-
 
 class Locus(models.Model):
     locus = SlugField(primary_key=True)
@@ -169,11 +150,9 @@ class Locus(models.Model):
     order = IntegerField(help_text='Detemines display ordering')
     locus_type = SlugField(choices=(('AMINOACID', 'Amino acid'), ('HAPLOTYPE', 'Haplotype')))
     genomic_region = CharField(max_length=50, help_text='format: Chromosome:Position1-Position2')
-
     class Meta:
         db_table = 'loci'
         verbose_name_plural = 'Loci'
-
 
 class LocusVariant(models.Model):
     locus_variant = SlugField(primary_key=True)
@@ -183,20 +162,17 @@ class LocusVariant(models.Model):
     order = IntegerField(help_text='Detemines display ordering')
     is_mutant = BooleanField()
     color = CharField(max_length=6)
-    frequencies = ManyToManyField('SampleSet', through='LocusFrequency')
-
+    frequencies = ManyToManyField('SampleClassification', through='LocusFrequency')
     class Meta:
         db_table = 'loci_variants'
         verbose_name_plural = 'LociVariants'
 
-
 class LocusFrequency(models.Model):
     locus_frequency = AutoField(primary_key=True)
-    sample_set = ForeignKey('SampleSet')
+    sample_set = ForeignKey('SampleClassification')
     locus_variant = ForeignKey('LocusVariant')
     count = IntegerField()
     fraction = FloatField()
-
     class Meta:
         db_table = 'locus_frequencies'
         unique_together = (('sample_set', 'locus_variant'),)
@@ -209,22 +185,18 @@ class SNP(models.Model):
     position = IntegerField()
     gene = ForeignKey('Gene')
     mutation_name = CharField(max_length=100, help_text="Name of the aminoacid mutation")
-    frequencies = ManyToManyField('SampleSet', through='SNPFrequency')
-
+    frequencies = ManyToManyField('SampleClassification', through='SNPFrequency')
     class Meta:
         db_table = 'snps'
 
-
 class SNPFrequency(models.Model):
     snp_freqency = AutoField(primary_key=True)
-    sample_set = ForeignKey('SampleSet')
+    sample_set = ForeignKey('SampleClassification')
     snp = ForeignKey('SNP')
     count_ref = IntegerField()
     count_non_ref = IntegerField()
     frac_non_ref = FloatField()
-
     class Meta:
         db_table = "snp_frequencies"
         unique_together = (('sample_set', 'snp'),)
         verbose_name_plural = 'SNPFrequencies'
-

@@ -4,7 +4,7 @@ from tastypie.authentication import Authentication
 from tastypie.api import Api
 from tastypie import fields
 from types import NoneType
-from ganesha.models import Study, Sample, SampleContext, Location, ContactPerson, StudyContactPerson, Affiliation, Institute, SampleSetType
+from ganesha.models import Study, Sample, SampleContext, Location, ContactPerson, StudyContactPerson, Affiliation, SampleClassification, SampleClassificationType, Institute
 
 ######### Inline field defs ########
 
@@ -38,19 +38,24 @@ class ForeignKeyInlineToggle(fields.ForeignKey):
         return related_resource.full_dehydrate(bundle)
 
 ######### Resource definitions ########
-
 class InstituteResource(ModelResource):
     class Meta:
         queryset = Institute.objects.all()
         authentication = Authentication()
         authorization = Authorization()
 
+class AffiliationResource(ModelResource):
+    institute = ForeignKeyInlineToggle(InstituteResource, 'institute')
+    class Meta:
+        queryset = Affiliation.objects.select_related('institute').all()
+        authentication = Authentication()
+        authorization = Authorization()
 
 class ContactPersonResource(ModelResource):
-    affiliations = ToManyFieldInlineToggle('ganesha.api.AffiliationResource',
+    affiliations = ToManyFieldInlineToggle(AffiliationResource,
                                            attribute=lambda bundle: bundle.obj.affiliations.through.objects.filter(
                                                contact_person=bundle.obj) or bundle.obj.affiliations)
-    #affiliations = fields.ToManyField(AffiliationResource, 'affiliations')
+    #affiliations = fields.ToManyField('ganesha.api.AffiliationResource', 'affiliations')
     def save_m2m(self, bundle):
         related_mngr = getattr(bundle.obj, 'affiliations')
         if hasattr(related_mngr, 'clear'):
@@ -61,27 +66,14 @@ class ContactPersonResource(ModelResource):
             related_bundle.obj.institute = related_bundle.obj.institute
             related_bundle.obj.contact_person = bundle.obj
             related_bundle.obj.save()
-
     class Meta:
         resource_name = 'contact_person'
         queryset = ContactPerson.objects.prefetch_related('affiliations').all()
         authentication = Authentication()
         authorization = Authorization()
 
-
-class AffiliationResource(ModelResource):
-    institute = ForeignKeyInlineToggle(InstituteResource, 'institute')
-    contact_person = fields.ForeignKey(ContactPersonResource, 'contact_person')
-
-    class Meta:
-        queryset = Affiliation.objects.select_related('institute').all()
-        authentication = Authentication()
-        authorization = Authorization()
-
-
 class StudyResource(ModelResource):
     contact_persons = ToManyFieldInlineToggle(ContactPersonResource, 'contact_persons')
-
     class Meta:
         queryset = Study.objects.prefetch_related('contact_persons').all()
         filtering = {
@@ -96,17 +88,14 @@ class StudyResource(ModelResource):
         authentication = Authentication()
         authorization = Authorization()
 
-
 class StudyContactPersonResource(ModelResource):
     study = fields.ForeignKey(StudyResource, 'study')
     contact_person = fields.ForeignKey(ContactPersonResource, 'contactperson')
-
     class Meta:
         resource_name = 'study_contact_person'
         queryset = StudyContactPerson.objects.all()
         authentication = Authentication()
         authorization = Authorization()
-
 
 class LocationResource(ModelResource):
     class Meta:
@@ -121,12 +110,10 @@ class LocationResource(ModelResource):
         authentication = Authentication()
         authorization = Authorization()
 
-
 class SampleContextResource(ModelResource):
     study = ForeignKeyInlineToggle(StudyResource, 'study', )
     location = ForeignKeyInlineToggle(LocationResource, 'location', )
     samples = fields.ToManyField('ganesha.api.SampleResource', 'sample_set', related_name='sample_context')
-
     class Meta:
         resource_name = 'sample_context'
         queryset = SampleContext.objects.select_related('study', 'location').all()
@@ -140,10 +127,8 @@ class SampleContextResource(ModelResource):
         authentication = Authentication()
         authorization = Authorization()
 
-
 class SampleResource(ModelResource):
     sample_context = ForeignKeyInlineToggle(SampleContextResource, 'sample_context')
-
     class Meta:
         queryset = Sample.objects.select_related('sample_context', 'country', 'population').all()
         filtering = {
@@ -154,27 +139,27 @@ class SampleResource(ModelResource):
         authentication = Authentication()
         authorization = Authorization()
 
-
-class SampleSetTypeResource(ModelResource):
-
+class SampleClassificationTypeResource(ModelResource):
     class Meta:
-        queryset = SampleSetType.objects.all()
+        resource_name = 'sample_classification_type'
+        queryset = SampleClassificationType.objects.all()
         filtering = {
-            'sample_set_type': ALL,
+            'sample_classification_type': ALL,
             'name': ALL,
         }
         authentication = Authentication()
         authorization = Authorization()
 
-
-class SampleSetResource(ModelResource):
-    samples = fields.ToManyField('ganesha.api.SampleResource', 'sample_set', related_name='sample_set')
-
+class SampleClassificationResource(ModelResource):
+    sample_classification_type = ForeignKeyInlineToggle(SampleClassificationTypeResource, 'sample_classification_type')
+    samples = fields.ToManyField('ganesha.api.SampleResource', 'samples', related_name='sample_classification')
     class Meta:
-        resource_name = 'sample_set'
-        queryset = SampleSet.objects.select_related('sample_set_type').all()
+        resource_name = 'sample_classification'
+        queryset = SampleClassification.objects.select_related('sample_classification_type').all()
+        authentication = Authentication()
+        authorization = Authorization()
 
-        
+
 
 
 v1_api = Api(api_name='v1')
@@ -186,4 +171,5 @@ v1_api.register(StudyContactPersonResource())
 v1_api.register(SampleContextResource())
 v1_api.register(SampleResource())
 v1_api.register(LocationResource())
-v1_api.register(SampleSetTypeResource())
+v1_api.register(SampleClassificationTypeResource())
+v1_api.register(SampleClassificationResource())
