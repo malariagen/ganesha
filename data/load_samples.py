@@ -171,7 +171,7 @@ def insert_sample_classification_types():
 
 def insert_sample_classifications(ss_URI_by_name, sample_metadata_file):
     ss_by_type_by_id = defaultdict(lambda: defaultdict(list))
-    types = ['Region', 'Country', 'SubCont']
+    types = ['Region', 'SubCont']
     for line in Reader(sample_metadata_file):
         if line['Exclude'] != 'TRUE':
             for t in types:
@@ -181,9 +181,9 @@ def insert_sample_classifications(ss_URI_by_name, sample_metadata_file):
             post('sample_classification', {
                 'sample_classification': _id,
                 'sample_classification_type': ss_URI_by_name[t],
-                'name': _id if t != 'Country' else iso_countries.names_by_id[_id],
-                'lattit': 0 if t != 'Country' else iso_countries.lat_long_by_id[_id][0],
-                'longit': 0 if t != 'Country' else iso_countries.lat_long_by_id[_id][1],
+                'name': iso_countries.names_by_id.get(_id,_id),
+                'lattit': iso_countries.lat_long_by_id.get(_id, (0, 0))[0],
+                'longit': iso_countries.lat_long_by_id.get(_id, (0, 0))[1],
                 'geo_json': '',
                 'samples': [URI_from_id('sample', s) for s in samples]
             })

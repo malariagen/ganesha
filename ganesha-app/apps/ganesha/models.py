@@ -132,6 +132,14 @@ class SampleClassification(models.Model):
     class Meta:
         db_table = 'sample_classifications'
 
+class SampleClassificationSample(models.Model):
+    sample = ForeignKey('Sample')
+    sampleclassification = ForeignKey('SampleClassification')
+    class Meta:
+        db_table = 'sample_classifications_samples'
+        managed = False
+
+
 ######### RESISTANCE MARKERS ######
 class Gene(models.Model):
     gene = SlugField(primary_key=True)

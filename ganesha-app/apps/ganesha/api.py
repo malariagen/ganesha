@@ -4,7 +4,7 @@ from tastypie.authentication import Authentication
 from tastypie.api import Api
 from tastypie import fields
 from types import NoneType
-from ganesha.models import Study, Sample, SampleContext, Location, ContactPerson, StudyContactPerson, Affiliation, SampleClassification, SampleClassificationType, Institute
+from ganesha.models import Study, Sample, SampleContext, Location, ContactPerson, StudyContactPerson, Affiliation, SampleClassification, SampleClassificationType, Institute, SampleClassificationSample
 
 ######### Inline field defs ########
 
@@ -46,16 +46,17 @@ class InstituteResource(ModelResource):
 
 class AffiliationResource(ModelResource):
     institute = ForeignKeyInlineToggle(InstituteResource, 'institute')
+    contact_person = ForeignKeyInlineToggle('ganesha.api.ContactPersonResource', 'institute')
     class Meta:
         queryset = Affiliation.objects.select_related('institute').all()
         authentication = Authentication()
         authorization = Authorization()
 
 class ContactPersonResource(ModelResource):
-    affiliations = ToManyFieldInlineToggle(AffiliationResource,
-                                           attribute=lambda bundle: bundle.obj.affiliations.through.objects.filter(
-                                               contact_person=bundle.obj) or bundle.obj.affiliations)
-    #affiliations = fields.ToManyField('ganesha.api.AffiliationResource', 'affiliations')
+    #affiliations = ToManyFieldInlineToggle(AffiliationResource,
+    #                                       attribute=lambda bundle: bundle.obj.affiliations.through.objects.filter(
+    #                                           contact_person=bundle.obj) or bundle.obj.affiliations)
+    affiliations = fields.ToManyField('ganesha.api.AffiliationResource', 'affiliations')
     def save_m2m(self, bundle):
         related_mngr = getattr(bundle.obj, 'affiliations')
         if hasattr(related_mngr, 'clear'):
@@ -159,6 +160,14 @@ class SampleClassificationResource(ModelResource):
         authentication = Authentication()
         authorization = Authorization()
 
+class SampleClassificationSampleResource(ModelResource):
+    sample = fields.ForeignKey(StudyResource, 'sample')
+    sample_classification = fields.ForeignKey(SampleClassificationResource, 'sampleclassification')
+    class Meta:
+        resource_name = 'sample_classification_sample'
+        queryset = SampleClassificationSample.objects.select_related('sample', 'sampleclassification').all()
+        authentication = Authentication()
+        authorization = Authorization()
 
 
 
@@ -173,3 +182,4 @@ v1_api.register(SampleResource())
 v1_api.register(LocationResource())
 v1_api.register(SampleClassificationTypeResource())
 v1_api.register(SampleClassificationResource())
+v1_api.register(SampleClassificationSampleResource())
