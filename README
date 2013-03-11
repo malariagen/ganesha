@@ -1,1 +1,30 @@
 API driven datastore for PFPopGen2013
+
+
+Install:
+   git clone git@github.com:benjeffery/ganesha.git
+   cd ganesha
+   pip install -r REQUIREMENTS   (or set up a virtualenv, whatever floats ya boat)
+
+edit settings/common.py for the database config
+create db with:
+   python manage.py syncdb --settings=settings.development
+this will also ask you to setup an admin username/pass
+
+You can then run the server with:
+   python manage.py runserver --settings=settings.development
+Which will startup on port 8000
+You can nav to:
+http://127.0.0.1:8000/admin               log in to see and edit the db_tables.
+http://127.0.0.1:8000/api/v1/?format=json gives you the api endpoint.
+http://127.0.0.1:8000/htsql/              gives you the HTSQL endpoint
+
+Load up some data:
+    python load_samples.py     Uses the files from alfresco and Roberto to fill the DB over the REST API
+
+Then one can use the following commands from the PfPopGen project:
+(note that config.py must be correctly set)
+   shovel db.create                                           #Makes an empty DB
+   shovel db.import_from_api http://127.0.0.1:4000/api/v1/    #Imports from the REST API
+
+
