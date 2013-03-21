@@ -46,17 +46,17 @@ class InstituteResource(ModelResource):
 
 class AffiliationResource(ModelResource):
     institute = ForeignKeyInlineToggle(InstituteResource, 'institute')
-    contact_person = ForeignKeyInlineToggle('ganesha.api.ContactPersonResource', 'institute')
+    #contact_person = ForeignKeyInlineToggle('ganesha.api.ContactPersonResource', 'institute')
     class Meta:
         queryset = Affiliation.objects.select_related('institute').all()
         authentication = Authentication()
         authorization = Authorization()
 
 class ContactPersonResource(ModelResource):
-    #affiliations = ToManyFieldInlineToggle(AffiliationResource,
-    #                                       attribute=lambda bundle: bundle.obj.affiliations.through.objects.filter(
-    #                                           contact_person=bundle.obj) or bundle.obj.affiliations)
-    affiliations = fields.ToManyField('ganesha.api.AffiliationResource', 'affiliations')
+    affiliations = ToManyFieldInlineToggle(AffiliationResource,
+                                           attribute=lambda bundle: bundle.obj.affiliations.through.objects.filter(
+                                               contact_person=bundle.obj) or bundle.obj.affiliations)
+    #affiliations = fields.ToManyField('ganesha.api.AffiliationResource', 'affiliations')
     def save_m2m(self, bundle):
         related_mngr = getattr(bundle.obj, 'affiliations')
         if hasattr(related_mngr, 'clear'):
