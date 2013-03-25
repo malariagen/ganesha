@@ -1,0 +1,24 @@
+
+
+DROP TABLE IF EXISTS `Populations-AlleleFreq-daf`;
+
+CREATE TABLE `Populations-AlleleFreq-daf` (
+  `Num` varchar(10) DEFAULT NULL,
+  `Chr` int(11) DEFAULT NULL,
+  `Pos` int(11) DEFAULT NULL,
+  `SnpName` varchar(20) DEFAULT NULL,
+  `WAF` double,
+  `EAF` double,
+  `SAS` double,
+  `SEA` double,
+  `PNG` double,
+  `SAM` double);
+
+LOAD DATA LOCAL INFILE 'Populations-AlleleFreq-daf.tab' into table `Populations-AlleleFreq-daf`
+        FIELDS TERMINATED BY '\t' ENCLOSED BY '"' ESCAPED BY '"'
+        LINES TERMINATED BY '\n'
+        IGNORE 1 LINES 
+        (
+		Num,Chr,Pos,SnpName,WAF,EAF,SAS,SEA,PNG,SAM
+        );
+

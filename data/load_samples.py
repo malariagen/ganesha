@@ -86,6 +86,7 @@ def list_wanted_studies(sample_metadata_file):
 def insert_studies(study_list, alfresco_json):
     #Find those studies and insert them
     contact_URI_by_name = {}
+    affiliation_URI_by_name = {}
     study_URI_by_legacy_name = {}
     af = json.load(open(alfresco_json))
     for af_study in af['collaborationNodes']:
@@ -107,6 +108,14 @@ def insert_studies(study_list, alfresco_json):
                                    ],
                                    'description': '',
                                    }
+#                        affiliation = affiliation_URI_by_name.get(af_contact['company'][:100], None)
+#			if affiliation is None:
+#			   affiliation = {
+#                                           'name': af_contact['company'][:100],
+#                                           'institute': af_contact['company'][:50]
+#                                       }
+#                           affiliation = post('institute', affiliation)
+#                           affiliation_URI_by_name[af_contact['company'][:100]] = affiliation
                         contact = post('contact_person', contact)
                         contact_URI_by_name[name] = contact
                     study_contacts.append(contact)
@@ -189,9 +198,9 @@ def insert_sample_classifications(ss_URI_by_name, sample_metadata_file):
             })
 
 #Insert the two sample set types
-location_URI_by_id, location_desc_by_id = insert_locations('SitesInfo.txt')
-studies = list_wanted_studies('metadata-2.2_withsites.txt')
-study_URI_by_legacy_name = insert_studies(studies, 'alfresco121218.json')
-insert_sample_contexts('metadata-2.2_withsites.txt', study_URI_by_legacy_name, location_URI_by_id, location_desc_by_id)
+location_URI_by_id, location_desc_by_id = insert_locations('Data/SitesInfo.txt')
+studies = list_wanted_studies('Data/metadata-2.2_withsites.txt')
+study_URI_by_legacy_name = insert_studies(studies, 'alfresco.json')
+insert_sample_contexts('Data/metadata-2.2_withsites.txt', study_URI_by_legacy_name, location_URI_by_id, location_desc_by_id)
 ss_URI_by_name = insert_sample_classification_types()
-insert_sample_classifications(ss_URI_by_name, 'metadata-2.2_withsites.txt')
+insert_sample_classifications(ss_URI_by_name, 'Data/metadata-2.2_withsites.txt')

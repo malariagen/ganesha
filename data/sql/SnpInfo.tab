@@ -1,0 +1,40 @@
+
+
+
+DROP TABLE IF EXISTS `SnpInfo`;
+
+CREATE TABLE `SnpInfo` (
+  `Num` varchar(10) DEFAULT NULL,
+  `Chr` int(11) DEFAULT NULL,
+  `Pos` int(11) DEFAULT NULL,
+  `SnpName` varchar(20) DEFAULT NULL,
+  `ref` varchar(2) DEFAULT NULL,
+  `nonrref` varchar(2) DEFAULT NULL,
+  `outgroup` varchar(2) DEFAULT NULL,
+  `ancestral` varchar(2) DEFAULT NULL,
+  `derived` varchar(2) DEFAULT NULL,
+  `pvtAllele` varchar(2) DEFAULT NULL,
+  `pvtPop` varchar(5) DEFAULT NULL,
+  `GeneId` varchar(20) DEFAULT NULL,
+  `GeneDescription` varchar(500) DEFAULT NULL,
+  `Strand` varchar(2) DEFAULT NULL,
+  `CodonNum` int(11) DEFAULT NULL,
+  `Codon` varchar(3) DEFAULT NULL,
+  `NtPos` int(11) DEFAULT NULL,
+  `RefAmino` varchar(2) DEFAULT NULL,
+  `Mutation` varchar(2) DEFAULT NULL,
+  `MutCodon` varchar(3) DEFAULT NULL,
+  `MutAmino` varchar(2) DEFAULT NULL,
+  `MutType` varchar(2) DEFAULT NULL,
+  `MutName` varchar(10) DEFAULT NULL,
+  KEY `SnpName` (`SnpName`) );
+
+
+LOAD DATA LOCAL INFILE 'SnpInfo.tab' into table SnpInfo
+        FIELDS TERMINATED BY '\t' ENCLOSED BY '"' ESCAPED BY '"'
+        LINES TERMINATED BY '\n'
+        IGNORE 1 LINES 
+        (
+		Num,Chr,Pos,SnpName,ref,nonrref,outgroup,ancestral,derived,pvtAllele,pvtPop,GeneId,GeneDescription,Strand,CodonNum,Codon,NtPos,RefAmino,Mutation,MutCodon,MutAmino,MutType,MutName
+        );
+

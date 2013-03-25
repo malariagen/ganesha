@@ -1,0 +1,21 @@
+
+DROP TABLE IF EXISTS `Definition-SampleClassifications`;
+CREATE TABLE `Definition-SampleClassifications` (
+  `name` varchar(100) DEFAULT NULL,
+  `id` varchar(50) NOT NULL,
+  `type` varchar(50) DEFAULT NULL,
+  `longit` double DEFAULT NULL,
+  `lattit` double DEFAULT NULL,
+  `geo_json` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+LOAD DATA LOCAL INFILE 'Definition-SampleClassifications.tab' into table `Definition-SampleClassifications`
+        FIELDS TERMINATED BY '\t' ENCLOSED BY '"' ESCAPED BY '"'
+        LINES TERMINATED BY '\n'
+        IGNORE 1 LINES 
+        (
+		name,id,type,longit,lattit
+        );
+

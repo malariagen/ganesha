@@ -1,0 +1,18 @@
+
+DROP TABLE IF EXISTS `Populations-CompositeGenotypes-Counts`;
+CREATE TABLE `Populations-CompositeGenotypes-Counts` (
+  `Type` varchar(20) DEFAULT NULL,
+  `Variation` varchar(20) DEFAULT NULL,
+  `Allele` varchar(20) DEFAULT NULL,
+  `Pop` varchar(60) DEFAULT NULL,
+  `Count` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOAD DATA LOCAL INFILE 'Populations-CompositeGenotypes-Counts.tab' into table `Populations-CompositeGenotypes-Counts`
+        FIELDS TERMINATED BY '\t' ENCLOSED BY '"' ESCAPED BY '"'
+        LINES TERMINATED BY '\n'
+        IGNORE 1 LINES 
+        (
+                Type,Variation,Allele,Pop,Count
+        );
+
