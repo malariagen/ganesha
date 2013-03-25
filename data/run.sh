@@ -1,6 +1,4 @@
-DBUSER=
-DBPASS=
-DB=
+. ./config.sh
 rm -rf Population\ genetics\ data/
 python getFiles.py
 cd Population\ genetics\ data/
