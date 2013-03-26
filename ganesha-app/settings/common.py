@@ -24,7 +24,7 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'ganesha-test',                      # Or path to database file if using sqlite3.
         'USER': 'ganesha-test',                      # Not used with sqlite3.
         'PASSWORD': 'ganesha-test',                  # Not used with sqlite3.
@@ -140,7 +140,7 @@ INSTALLED_APPS = (
 
 HTSQL_CONFIG = {
     # Set query timeout in seconds (currently, PostgreSQL only).
-    'tweak.timeout': { 'timeout': 600 },
+    #'tweak.timeout': { 'timeout': 600 },
     # Set the maximum number of output rows.
     'tweak.autolimit': { 'limit': 10000 },
     # Enable the web-based query editor.
