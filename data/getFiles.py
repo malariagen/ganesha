@@ -9,19 +9,20 @@ cmisConfigSectionName='cmis_repository'
 config = ConfigParser.RawConfigParser()
 config.read(configFileName)
 
-def getFiles(folder):
+def getFiles(root, folder):
   children= folder.getChildren()
-  if not os.path.exists(folder.name):
-    os.makedirs(folder.name)
+  targetFolder = root + folder.name + "/"
+  if not os.path.exists(targetFolder):
+    os.makedirs(targetFolder)
   for child in children:
      print child.name
      print child.__class__
      if (isinstance(child,Folder)):
     # if (child.name == "Population genetics data"):
-	getFiles(child)
+	getFiles(targetFolder, child)
      else:
        stream = child.getContentStream()
-       f = open(folder.name+"/"+child.name,"w")
+       f = open(targetFolder+child.name,"w")
        for line in stream:
 	f.write(line)
        f.close()
@@ -32,7 +33,7 @@ repo = client.defaultRepository
 print repo
 #someFolder = repo.getObjectByPath('Sites/pf-web-app/documentLibrary/Data')
 someFolder = repo.getObject('workspace://SpacesStore/21f48cad-ecc7-4b27-92c2-4a633478e782')
-getFiles(someFolder)
+getFiles("./", someFolder)
 
 # create a password manager
 password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
