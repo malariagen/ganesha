@@ -93,7 +93,7 @@ def insert_studies(study_list, alfresco_json):
         for legacy_study in study_list:
             if legacy_study == af_study['intDescrip'] or legacy_study == af_study['intDescrip'].split(':')[0] or legacy_study == af_study['title'].split(' ')[0]:
                 study_contacts = []
-                for af_contact in af_study['contacts']:
+                for af_contact in af_study['primaryContacts']:
                     name = ' '.join([af_contact['firstName'], af_contact['lastName']])
                     #Some have no email so have to use name for unique key for now....
                     contact = contact_URI_by_name.get(name, None)
