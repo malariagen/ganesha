@@ -1,13 +1,13 @@
 . ./config.sh
-rm -rf Population\ genetics\ data/
+rm -rf Data
 python getFiles.py
-cd Population\ genetics\ data/
+cd Data/Population\ genetics\ data/
 for i in *
 do
 	DIR=`echo $i | sed -e 's/.zip//'`
 	if [ ${DIR} = $i ]
 	then
-		LOAD=../sql/$i
+		LOAD=../../sql/$i
 		if [ -f ${LOAD} ]
 		then
 mysql --local-infile=1 -u ${DBUSER} -p${DBPASS} ${DB} < ${LOAD}
@@ -23,7 +23,7 @@ mysql --local-infile=1 -u ${DBUSER} -p${DBPASS} ${DB} < ${LOAD}
 		unzip ../$i
 		for j in *
 		do
-			LOAD=../../sql/${DIR}#$j
+			LOAD=../../../sql/${DIR}#$j
 			if [ -f ${LOAD} ]
 			then
 mysql --local-infile=1 -u ${DBUSER} -p${DBPASS} ${DB} < ${LOAD}
@@ -32,7 +32,7 @@ mysql --local-infile=1 -u ${DBUSER} -p${DBPASS} ${DB} < ${LOAD}
 		cd ..
 	fi
 done
-cd ..
+cd ../..
 for i in sql/*.sql
 do
 	echo $i
