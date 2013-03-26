@@ -10,5 +10,5 @@ CREATE OR REPLACE VIEW pf21locusfreqs AS
   Pop as `AggregShortName`,
   Variation as `LocusID`,
   Allele as `VariantID`,
-  `Count` FROM `Population-CompositeGenotypes-Counts`;
+  `Count` FROM `Populations-CompositeGenotypes-Counts`;
 
