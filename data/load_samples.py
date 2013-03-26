@@ -91,7 +91,7 @@ def insert_studies(study_list, alfresco_json):
     af = json.load(open(alfresco_json))
     for af_study in af['collaborationNodes']:
         for legacy_study in study_list:
-            if legacy_study == af_study['title'].split(' ')[0]:
+            if legacy_study == af_study['intDescrip'] or legacy_study == af_study['intDescrip'].split(':')[0] or legacy_study == af_study['title'].split(' ')[0]:
                 study_contacts = []
                 for af_contact in af_study['contacts']:
                     name = ' '.join([af_contact['firstName'], af_contact['lastName']])
