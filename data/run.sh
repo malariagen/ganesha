@@ -1,6 +1,9 @@
 . ./config.sh
 rm -rf Data
 python getFiles.py
+(cd Data
+ python ../convert-xlsx-to-csv.py sample_contexts.xlsx
+)
 cd Data/Population\ genetics\ data/
 for i in *
 do

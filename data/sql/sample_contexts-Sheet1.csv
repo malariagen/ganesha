@@ -1,0 +1,20 @@
+
+DROP TABLE IF EXISTS `sample_context_description`;
+CREATE TABLE `sample_context_description` (
+  `sample_context` varchar(50) NOT NULL,
+  `study` varchar(50) DEFAULT NULL,
+  `country` varchar(50) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `sample_count` int(11) DEFAULT NULL,
+  `description` text,
+  PRIMARY KEY (`sample_context`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOAD DATA LOCAL INFILE 'sample_contexts-Sheet1.csv' into table `sample_context_description`
+        FIELDS TERMINATED BY '\t' ENCLOSED BY '"' ESCAPED BY '"'
+        LINES TERMINATED BY '\n'
+        IGNORE 1 LINES 
+        (
+		sample_context,study,country,title,sample_count,description
+        );
+
