@@ -1,19 +1,24 @@
 . ./config.sh
 rm -rf Data
 python getFiles.py
+SQLDIR=${PWD}/sql
 (cd Data
  python ../convert-xlsx-to-csv.py sample_contexts.xlsx
 )
-cd Data/Population\ genetics\ data/
-for i in *
+(cd Data
+for i in *.csv Population\ genetics\ data/* Miscellaneous/*
 do
 	DIR=`echo $i | sed -e 's/.zip//'`
-	if [ ${DIR} = $i ]
+	if [ "${DIR}" = "$i" ]
 	then
-		LOAD=../../sql/$i
-		if [ -f ${LOAD} ]
+		BASE=`basename "$i"`
+		LOAD=${PWD}/../sql/${BASE}
+		if [ -f "${LOAD}" ]
 		then
-mysql --local-infile=1 -u ${DBUSER} -p${DBPASS} ${DB} < ${LOAD}
+			PDIR=`dirname "$i"`
+			(cd "${PDIR}"
+mysql --local-infile=1 -u ${DBUSER} -p${DBPASS} ${DB} < ${SQLDIR}/${BASE}
+			)
 			if [ $? -ne 0 ]
 			then
 				echo "Error loading:"${i}
@@ -35,8 +40,8 @@ mysql --local-infile=1 -u ${DBUSER} -p${DBPASS} ${DB} < ${LOAD}
 		cd ..
 	fi
 done
-cd ../..
-for i in sql/*.sql
+)
+for i in ${SQLDIR}/*.sql
 do
 	echo $i
 	mysql -u ${DBUSER} -p${DBPASS} ${DB} < ${i}
