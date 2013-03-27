@@ -1,0 +1,16 @@
+DROP TABLE IF EXISTS `countries`;
+CREATE TABLE `countries` (
+  `ID` varchar(60) DEFAULT NULL,
+  `Name` varchar(200) DEFAULT NULL,
+  `CenterLongit` varchar(20) DEFAULT NULL,
+  `CenterLattit` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOAD DATA LOCAL INFILE 'countries.txt' into table `countries`
+        FIELDS TERMINATED BY '\t' ENCLOSED BY '"' ESCAPED BY '"'
+        LINES TERMINATED BY '\n'
+        IGNORE 1 LINES 
+        (
+		ID,Name,CenterLongit,CenterLattit
+        );
+
