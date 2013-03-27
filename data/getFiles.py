@@ -15,17 +15,17 @@ def getFiles(root, folder):
   if not os.path.exists(targetFolder):
     os.makedirs(targetFolder)
   for child in children:
-     print child.name
-     print child.__class__
      if (isinstance(child,Folder)):
     # if (child.name == "Population genetics data"):
 	getFiles(targetFolder, child)
      else:
-       stream = child.getContentStream()
-       f = open(targetFolder+child.name,"w")
-       for line in stream:
-	f.write(line)
-       f.close()
+       if ( child.properties['cmis:isLatestVersion'] == True):
+         print targetFolder+child.name+':'+child.properties['cmis:versionLabel']
+         stream = child.getContentStream()
+         f = open(targetFolder+child.name,"w")
+         for line in stream:
+	  f.write(line)
+         f.close()
 
 client = CmisClient(config.get(cmisConfigSectionName, "serviceUrl"),config.get(cmisConfigSectionName, "user_id"),config.get(cmisConfigSectionName, "password"))
 print client
