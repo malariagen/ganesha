@@ -12,7 +12,7 @@ CREATE TABLE `Definition-CompositeGenotypes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOAD DATA LOCAL INFILE 'Definition-CompositeGenotypes.tab' into table `Definition-CompositeGenotypes`
-        FIELDS TERMINATED BY '\t' ENCLOSED BY '"' ESCAPED BY '"'
+        FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
         (

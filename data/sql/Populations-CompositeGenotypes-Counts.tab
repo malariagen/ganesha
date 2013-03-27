@@ -9,7 +9,7 @@ CREATE TABLE `Populations-CompositeGenotypes-Counts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOAD DATA LOCAL INFILE 'Populations-CompositeGenotypes-Counts.tab' into table `Populations-CompositeGenotypes-Counts`
-        FIELDS TERMINATED BY '\t' ENCLOSED BY '"' ESCAPED BY '"'
+        FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
         (

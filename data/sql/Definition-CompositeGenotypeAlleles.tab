@@ -14,7 +14,7 @@ CREATE TABLE `Definition-CompositeGenotypeAlleles` (
 
 
 LOAD DATA LOCAL INFILE 'Definition-CompositeGenotypeAlleles.tab' into table `Definition-CompositeGenotypeAlleles`
-        FIELDS TERMINATED BY '\t' ENCLOSED BY '"' ESCAPED BY '"'
+        FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
         (

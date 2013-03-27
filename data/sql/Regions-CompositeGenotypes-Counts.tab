@@ -11,7 +11,7 @@ CREATE TABLE `Regions-CompositeGenotypes-Counts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOAD DATA LOCAL INFILE 'Regions-CompositeGenotypes-Counts.tab' into table `Regions-CompositeGenotypes-Counts`
-        FIELDS TERMINATED BY '\t' ENCLOSED BY '"' ESCAPED BY '"'
+        FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
         (

@@ -31,7 +31,7 @@ CREATE TABLE `SnpInfo` (
 
 
 LOAD DATA LOCAL INFILE 'SnpInfo.tab' into table SnpInfo
-        FIELDS TERMINATED BY '\t' ENCLOSED BY '"' ESCAPED BY '"'
+        FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
         (

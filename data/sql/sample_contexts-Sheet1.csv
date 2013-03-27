@@ -11,7 +11,7 @@ CREATE TABLE `sample_context_description` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOAD DATA LOCAL INFILE 'sample_contexts-Sheet1.csv' into table `sample_context_description`
-        FIELDS TERMINATED BY '\t' ENCLOSED BY '"' ESCAPED BY '"'
+        FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
         (

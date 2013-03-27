@@ -12,7 +12,7 @@ CREATE TABLE `Definition-SampleClassifications` (
 
 
 LOAD DATA LOCAL INFILE 'Definition-SampleClassifications.tab' into table `Definition-SampleClassifications`
-        FIELDS TERMINATED BY '\t' ENCLOSED BY '"' ESCAPED BY '"'
+        FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
         (

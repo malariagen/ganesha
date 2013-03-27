@@ -9,7 +9,7 @@ CREATE TABLE `Definition-GeneInfo` (
 
 
 LOAD DATA LOCAL INFILE 'Definition-GeneInfo.tab' into table `Definition-GeneInfo`
-        FIELDS TERMINATED BY '\t' ENCLOSED BY '"' ESCAPED BY '"'
+        FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
         (
