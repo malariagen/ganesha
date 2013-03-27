@@ -17,6 +17,7 @@ do
 		then
 			PDIR=`dirname "$i"`
 			(cd "${PDIR}"
+			fromdos ${BASE}
 mysql --local-infile=1 -u ${DBUSER} -p${DBPASS} ${DB} < ${SQLDIR}/${BASE}
 			)
 			if [ $? -ne 0 ]
