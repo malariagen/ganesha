@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS `SnpInfo`;
 
 CREATE TABLE `SnpInfo` (
   `Num` varchar(10) DEFAULT NULL,
-  `Chr` int(11) DEFAULT NULL,
+  `Chr` varchar(10) DEFAULT NULL,
   `Pos` int(11) DEFAULT NULL,
   `SnpName` varchar(20) DEFAULT NULL,
   `ref` varchar(2) DEFAULT NULL,
