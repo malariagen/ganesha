@@ -23,7 +23,7 @@ ALTER TABLE `Populations-AlleleFreq-nraf`
   ON UPDATE NO ACTION
 , ADD INDEX `fk_AlleleFreq-nraf_1` (`SnpName` ASC) ;
 
-CREATE OR REPLACE VIEW pfsnprel21 AS SELECT SnpInfo.Num as `num`, SnpInfo.Chr as `chrom`, SnpInfo.Pos as `pos`, SnpInfo.SnpName as `snpid`,
+CREATE OR REPLACE VIEW pfsnprel21 AS SELECT SnpInfo.Num as `num`, CAST(REPLACE(SnpInfo.Chr,'MAL','') AS UNSIGNED) as `chrom`, SnpInfo.Pos as `pos`, SnpInfo.SnpName as `snpid`,
   `ref`, `nonrref`, `outgroup`, `ancestral`, `derived`, `pvtAllele`, `pvtPop`, `GeneId`, `GeneDescription`, `Strand`, `CodonNum`, `Codon`, `NtPos`, `RefAmino`, `Mutation`, `MutCodon`, `MutAmino`, `MutType`, `MutName`, 
 	NRAF.WAF as `NRAF_WAF`,NRAF.EAF as `NRAF_EAF`, NRAF.SAS as `NRAF_SAS`, NRAF.SEA as `NRAF_SEA`, NRAF.PNG as `NRAF_PNG`, NRAF.SAM as `NRAF_SAM`,
   MAF.WAF as `MAF_WAF`, MAF.EAF as `MAF_EAF`, MAF.SAS as `MAF_SAS`, MAF.SEA as `MAF_SEA`, MAF.PNG as `MAF_PNG`, MAF.SAM as `MAF_SAM`,
