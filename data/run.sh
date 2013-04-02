@@ -6,7 +6,7 @@ SQLDIR=${PWD}/sql
  python ../convert-xlsx-to-csv.py sample_contexts.xlsx
 )
 (cd Data
-for i in *.csv Population\ genetics\ data/* Miscellaneous/*
+for i in *.csv *.tab Population\ genetics\ data/* Miscellaneous/*
 do
 	DIR=`echo $i | sed -e 's/.zip//'`
 	if [ "${DIR}" = "$i" ]
