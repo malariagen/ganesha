@@ -34,7 +34,3 @@ CREATE OR REPLACE VIEW pfsnprel21 AS SELECT SnpInfo.Num as `num`, CAST(REPLACE(S
   LEFT JOIN `Populations-AlleleFreq-maf` MAF ON SnpInfo.SnpName = MAF.SnpName
   LEFT JOIN `Populations-AlleleFreq-daf` DAF ON SnpInfo.SnpName = DAF.SnpName;
 
-ALTER TABLE pfsnprel21 ADD aliases VARCHAR(200);
-UPDATE pfsnprel21,pfannotrel21
-    SET pfsnprel21.aliases = pfannotrel21.fnames
-    WHERE pfsnprel21.GeneId = pfannotrel21.fid;
