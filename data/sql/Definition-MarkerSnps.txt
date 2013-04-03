@@ -1,12 +1,12 @@
-DROP TABLE IF EXISTS `Definition-ResistanceMarkerSNPs`;
+DROP TABLE IF EXISTS `Definition-MarkerSnps`;
 
-CREATE TABLE `Definition-ResistanceMarkerSNPs` (
+CREATE TABLE `Definition-MarkerSnps` (
   `GeneName` varchar(20) DEFAULT NULL,
   `GenomicRegion` varchar(20) DEFAULT NULL,
   `Name` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOAD DATA LOCAL INFILE 'Definition-ResistanceMarkerSNPs.tab' into table `Definition-ResistanceMarkerSNPs`
+LOAD DATA LOCAL INFILE 'Definition-MarkerSnps.txt' into table `Definition-MarkerSnps`
         FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
