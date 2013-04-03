@@ -9,7 +9,7 @@ CREATE TABLE `pf21locivariants` (
   `Comments` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOAD DATA LOCAL INFILE 'pf21locivariants.txt' into table `pf21locivariants.txt`
+LOAD DATA LOCAL INFILE 'pf21locivariants.txt' into table `pf21locivariants`
         FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
