@@ -12,6 +12,6 @@ LOAD DATA LOCAL INFILE 'SampleGroups.tab' into table `SampleGroups`
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
         (
-		Sample, Group, Pop
+		Sample, `Group`, Pop
         );
 
