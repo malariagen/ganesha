@@ -5,8 +5,15 @@ SQLDIR=${PWD}/sql
 (cd Data
  python ../convert-xlsx-to-csv.py sample_contexts.xlsx
 )
+(cd Data/Population\ genetics\ data
+mkdir Output
+PYTHONPATH=../../../../PfPopGenWeb/ExternalResources/ImportScripts/
+export PYTHONPATH
+python ${PYTHONPATH}ConvertResistanceMarkerData.py
+python ${PYTHONPATH}ConvertVariantCatalog.py
+)
 (cd Data
-for i in *.csv *.tab Population\ genetics\ data/* Miscellaneous/*
+for i in *.csv *.tab Population\ genetics\ data/Output/* Miscellaneous/*
 do
 	DIR=`echo $i | sed -e 's/.zip//'`
 	if [ "${DIR}" = "$i" ]
