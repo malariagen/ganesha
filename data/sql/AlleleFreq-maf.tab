@@ -15,7 +15,7 @@ CREATE TABLE `Populations-AlleleFreq-maf` (
   `PNG` double,
   `SAM` double);
 
-LOAD DATA LOCAL INFILE 'Populations-AlleleFreq-maf.tab' into table `Populations-AlleleFreq-maf`
+LOAD DATA LOCAL INFILE 'AlleleFreq-maf.tab' into table `Populations-AlleleFreq-maf`
         FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
