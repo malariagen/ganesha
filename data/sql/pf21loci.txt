@@ -1,0 +1,19 @@
+DROP TABLE IF EXISTS `pf21loci`;
+CREATE TABLE `pf21loci` (
+  `LocusID` varchar(20) DEFAULT NULL,
+  `ordr` int(11) DEFAULT NULL,
+  `GenomicRegion` varchar(20) DEFAULT NULL,
+  `LocusType` varchar(20) DEFAULT NULL,
+  `GeneName` varchar(20) DEFAULT NULL,
+  `Name` varchar(20) DEFAULT NULL,
+  `Comments` varchar(1000) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOAD DATA LOCAL INFILE 'pf21loci.txt' into table `pf21loci`
+        FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
+        LINES TERMINATED BY '\n'
+        IGNORE 1 LINES 
+        (
+		LocusID,ordr,GenomicRegion,LocusType,GeneName,Name,Comments
+        );
+

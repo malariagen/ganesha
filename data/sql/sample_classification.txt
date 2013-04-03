@@ -1,0 +1,17 @@
+DROP TABLE IF EXISTS `sample_classification`;
+CREATE TABLE `sample_classification` (
+  `name` varchar(100) DEFAULT NULL,
+  `sample_classification` varchar(50) NOT NULL,
+  `sample_classification_type` varchar(50) DEFAULT NULL,
+  `longit` double DEFAULT NULL,
+  `lattit` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOAD DATA LOCAL INFILE 'sample_classification.txt' into table `sample_classification`
+        FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
+        LINES TERMINATED BY '\n'
+        IGNORE 1 LINES 
+        (
+		name,sample_classification,sample_classification_type,longit,lattit
+        );
+

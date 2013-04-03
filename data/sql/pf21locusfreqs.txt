@@ -1,0 +1,17 @@
+DROP TABLE IF EXISTS `pf21locusfreqs`;
+CREATE TABLE `pf21locusfreqs` (
+  `AggregTypeID` varchar(7) NOT NULL DEFAULT '',
+  `AggregShortName` varchar(60) DEFAULT NULL,
+  `LocusID` varchar(20) DEFAULT NULL,
+  `VariantID` varchar(20) DEFAULT NULL,
+  `Count` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+LOAD DATA LOCAL INFILE 'pf21locusfreqs.txt' into table `pf21locusfreqs`
+        FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
+        LINES TERMINATED BY '\n'
+        IGNORE 1 LINES 
+        (
+                AggregTypeID,AggregShortName,LocusID,VariantID,Count
+        );
+
