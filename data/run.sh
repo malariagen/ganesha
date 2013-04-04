@@ -14,7 +14,7 @@ python ${PYTHONPATH}ConvertResistanceMarkerData.py
 #python ${PYTHONPATH}ConvertVariantCatalog.py
 )
 (cd Data
-for i in *.csv *.tab Population\ genetics\ data/* Population\ genetics\ data/Output/* Miscellaneous/*
+for i in *.csv *.tab *.txt Population\ genetics\ data/* Population\ genetics\ data/Output/* Miscellaneous/*
 do
 	DIR=`echo $i | sed -e 's/.zip//'`
 	if [ "${DIR}" = "$i" ]
