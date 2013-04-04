@@ -203,4 +203,5 @@ studies = list_wanted_studies('Data/metadata-2.2_withsites.txt')
 study_URI_by_legacy_name = insert_studies(studies, 'doc.json')
 insert_sample_contexts('Data/metadata-2.2_withsites.txt', study_URI_by_legacy_name, location_URI_by_id, location_desc_by_id)
 ss_URI_by_name = insert_sample_classification_types()
-insert_sample_classifications(ss_URI_by_name, 'Data/metadata-2.2_withsites.txt')
+#Replaced by sql/merge_sample_contexts.sql
+#insert_sample_classifications(ss_URI_by_name, 'Data/metadata-2.2_withsites.txt')
