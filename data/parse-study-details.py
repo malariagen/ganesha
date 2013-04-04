@@ -94,14 +94,19 @@ if __name__ == '__main__':
 
 #<w:pStyle w:val="Heading2"/>
 
-    section_titles = ["Study Title", "Study Description", "Study Overview", "Sub-Study Description", "Lead Partner", "Lead Partner(s)", "Key Associates", "Key Associate(s)", "Study Overview", "Publications", "Publications " ]
+    section_titles = ["Study Title", "Other Non-Partner Study Samples", "Study Description", "Study Overview", "Sub-Study Description", "Lead Partner", "Lead Partner(s)", "Lead Partner(s) and Academic Affiliations", "Key Associates", "Key Associate(s)", "Study Overview", "Publications", "Publications " ]
     '''Return the raw text of a document, as a list of paragraphs.'''
     paratextlist = []
     # Compile a list of all paragraph (p) elements
     paralist = []
     studylist = []
     study = None
+    section = None
     pageNr = 1
+    #Hackity, hack
+    lastPage = 0
+    lastTitle = ''
+    isLast = False
     for element in document.iter():
         # Find p (paragraph) elements
         if element.tag == '{'+nsprefixes['w']+'}p':
@@ -113,9 +118,11 @@ if __name__ == '__main__':
         heading = False
         # Loop through each paragraph
         for element in para.iter():
-            if element.tag == '{'+nsprefixes['w']+'}pStyle' and element.attrib['{'+nsprefixes['w']+'}val'] == 'Heading2':
+            if element.tag == '{'+nsprefixes['w']+'}pStyle' and (element.attrib['{'+nsprefixes['w']+'}val'] == 'Heading2' or element.attrib['{'+nsprefixes['w']+'}val'] == 'style2'):
               heading = True
             elif element.tag == '{'+nsprefixes['w']+'}br' and element.attrib['{'+nsprefixes['w']+'}type'] == 'page':
+              pageNr += 1
+            elif element.tag == '{'+nsprefixes['w']+'}pageBreakBefore': 
               pageNr += 1
             # Find t (text) elements
             elif element.tag == '{'+nsprefixes['w']+'}t':
@@ -130,15 +137,30 @@ if __name__ == '__main__':
                 paratext = paratext + '\t'
         # Add our completed paragraph text to the list of paragraph text
         if not len(paratext) == 0 and heading == False:
-            if section == "Study Title":
+            if section and (section == "Study Title"):
               if study:
                 studylist.append(study)
+              #Assume new study is on a new page (for no hard page breaks)
+              if (pageNr == lastPage):
+                pageNr += 1
+              if (lastTitle.startswith('TRAC')):
+                pageNr += 1
               study = create_study(paratext, pageNr)
-            elif section == "Study Description" or section == "Sub-Study Description" or section == "Study Overview":
+              lastPage = pageNr
+              lastTitle = paratext
+            elif section and section == "Other Non-Partner Study Samples":
+                if not isLast:
+		  study = create_study(paratext, pageNr)
+                  study['description'] = study['title']
+                  study['title'] = section
+                  isLast = True
+                else:
+                  study['description'] = study['description'] + paratext
+            elif section and (section == "Study Description" or section == "Sub-Study Description" or section == "Study Overview"):
               study['description'] = study['description'] + paratext
-            elif section == "Lead Partner" or section == "Lead Partner(s)":
+            elif section and (section == "Lead Partner" or section == "Lead Partner(s)" or section == "Lead Partner(s) and Academic Affiliations"):
               study['primaryContacts'].append(contact_from_string(paratext))
-            elif section == "Key Associates" or section == "Key Associate(s)":
+            elif section and (section == "Key Associates" or section == "Key Associate(s)"):
               study['contacts'].append(contact_from_string(paratext))
             #print section + ":" + paratext
             #paratextlist.append(paratext)
@@ -149,7 +171,7 @@ if __name__ == '__main__':
     for s,page in studies_index.iteritems():
       found = False
       for study in studylist:
-        #print s + ' ' + page + ' ' + str(study['pageNr'])
+        #print s + '#' + page + ' ' + " " + str(study['pageNr'])
         if (str(study['pageNr']) == page):
           newStudy = copy.deepcopy(study)
           newStudy['intDescrip'] = s
