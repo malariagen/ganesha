@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `sample_classification`;
-CREATE TABLE `sample_classification` (
+DROP TABLE IF EXISTS `sample_classifications`;
+CREATE TABLE `sample_classifications` (
   `ordr` int(11),
   `name` varchar(100) DEFAULT NULL,
   `sample_classification` varchar(50) NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE `sample_classification` (
   `lattit` double DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOAD DATA LOCAL INFILE 'sample_classification.txt' into table `sample_classification`
+LOAD DATA LOCAL INFILE 'sample_classification.txt' into table `sample_classifications`
         FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
