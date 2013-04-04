@@ -1,0 +1,34 @@
+DROP TABLE IF EXISTS `metadata-2.2_withsites`;
+CREATE TABLE `metadata-2.2_withsites` (
+	Num varchar(100) DEFAULT NULL,
+	Sample varchar(100) DEFAULT NULL,
+	Study varchar(100) DEFAULT NULL,
+	Country varchar(100) DEFAULT NULL,
+	LabSample varchar(100) DEFAULT NULL,
+	LowTypability varchar(100) DEFAULT NULL,
+	PcaOutlier varchar(100) DEFAULT NULL,
+	IsDuplicate varchar(100) DEFAULT NULL,
+	ManualExlusion varchar(100) DEFAULT NULL,
+	Exclude varchar(100) DEFAULT NULL,
+	Fws varchar(100) DEFAULT NULL,
+	Typability varchar(100) DEFAULT NULL,
+	UsedInSnpDiscovery varchar(100) DEFAULT NULL,
+	Location varchar(100) DEFAULT NULL,
+	Year varchar(100) DEFAULT NULL,
+	Region varchar(100) DEFAULT NULL,
+	KhCluster varchar(100) DEFAULT NULL,
+	SubCont varchar(100) DEFAULT NULL,
+	Site varchar(100) DEFAULT NULL,
+	SiteCode varchar(100) DEFAULT NULL,
+	SiteInfoSource varchar(100) DEFAULT NULL,
+	Notes varchar(100) DEFAULT NULL,
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOAD DATA LOCAL INFILE 'metadata-2.2_withsites.txt' into table `metadata-2.2_withsites`
+        FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
+        LINES TERMINATED BY '\n'
+        IGNORE 1 LINES 
+        (
+Num,Sample,Study,Country,LabSample,LowTypability,PcaOutlier,IsDuplicate,ManualExlusion,Exclude,Fws,Typability,UsedInSnpDiscovery,Location,Year,Region,KhCluster,SubCont,Site,SiteCode,SiteInfoSource,Notes
+        );
+
