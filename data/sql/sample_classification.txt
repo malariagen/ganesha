@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS `sample_classification`;
 CREATE TABLE `sample_classification` (
+  `ordr` int(11),
   `name` varchar(100) DEFAULT NULL,
   `sample_classification` varchar(50) NOT NULL,
   `sample_classification_type` varchar(50) DEFAULT NULL,
@@ -12,6 +13,6 @@ LOAD DATA LOCAL INFILE 'sample_classification.txt' into table `sample_classifica
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
         (
-		name,sample_classification,sample_classification_type,longit,lattit
+		ordr,name,sample_classification,sample_classification_type,longit,lattit
         );
 
