@@ -21,7 +21,7 @@ CREATE TABLE `metadata-2.2_withsites` (
 	Site varchar(100) DEFAULT NULL,
 	SiteCode varchar(100) DEFAULT NULL,
 	SiteInfoSource varchar(100) DEFAULT NULL,
-	Notes varchar(100) DEFAULT NULL,
+	Notes varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOAD DATA LOCAL INFILE 'metadata-2.2_withsites.txt' into table `metadata-2.2_withsites`
