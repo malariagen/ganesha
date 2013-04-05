@@ -13,3 +13,5 @@ insert into sample_classifications_samples (sampleclassification_id, sample_id) 
 delete sample_classifications_samples from sample_classifications_samples LEFT JOIN sample_classifications ON sample_classifications_samples.sampleclassification_id = sample_classifications.sample_classification where sample_classification_type_id = 'region';
 
 insert into sample_classifications_samples (sampleclassification_id, sample_id) select Country,Sample from `metadata-2.2_withsites` md LEFT JOIN sample_classifications_samples scs ON scs.sample_id = md.Sample  where Exclude='FALSE';
+
+UPDATE contact_persons cp LEFT JOIN images i on i.name = cp.contact_person SET cp.image = i.url;
