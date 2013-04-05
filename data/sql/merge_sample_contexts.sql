@@ -1,5 +1,8 @@
 UPDATE sample_contexts sc LEFT JOIN sample_context_description scd ON sc.sample_context = scd.sample_context SET sc.description = scd.description;
 
+INSERT INTO sample_classifications (ordr, sample_classification, sample_classification_type_id, name, lattit, longit) 
+SELECT ordr,sample_classification,sample_classification_type,name,longit,lattit FROM sample_classifications1;
+
 INSERT INTO sample_classifications (sample_classification, sample_classification_type_id, name, lattit, longit) 
 SELECT DISTINCT `Pop`, 'subcont', name, lattit, longit FROM SampleGroups sg LEFT JOIN `Definition-Populations` dp ON dp.ID = sg.`Pop` WHERE `Pop` NOT IN (SELECT sample_classification FROM sample_classifications);
 
