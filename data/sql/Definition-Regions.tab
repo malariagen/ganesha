@@ -1,0 +1,16 @@
+DROP TABLE IF EXISTS `Definition-Regions`;
+CREATE TABLE `Definition-Regions` (
+  `Name` varchar(200) DEFAULT NULL,
+  `ID` varchar(60) DEFAULT NULL,
+  `longit` varchar(20) DEFAULT NULL,
+  `lattit` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOAD DATA LOCAL INFILE 'Definition-Regions.tab' into table `Definition-Regions`
+        FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
+        LINES TERMINATED BY '\n'
+        IGNORE 1 LINES 
+        (
+		`ID`,`Name`,`longit`,`lattit`
+        );
+
