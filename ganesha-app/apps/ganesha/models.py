@@ -109,6 +109,7 @@ class Institute(models.Model):
 class SampleClassificationType(models.Model):
     sample_classification_type = SlugField(primary_key=True)
     name = CharField(max_length=100)
+    ordr = IntegerField(help_text='Determines display ordering')
     description = TextField()
     #FK from SampleClassification
     def save(self, **kwargs):
@@ -123,7 +124,7 @@ class SampleClassificationType(models.Model):
 class SampleClassification(models.Model):
     sample_classification = SlugField(primary_key=True)
     sample_classification_type = ForeignKey('SampleClassificationType')
-    ordr = IntegerField(help_text='Detemines display ordering')
+    ordr = IntegerField(help_text='Determines display ordering')
     name = CharField(max_length=100)
     lattit = FloatField(null=True)
     longit = FloatField(null=True)
