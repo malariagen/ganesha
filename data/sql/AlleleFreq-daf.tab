@@ -10,7 +10,8 @@ CREATE TABLE `Populations-AlleleFreq-daf` (
   `WAF` double,
   `EAF` double,
   `SAS` double,
-  `SEA` double,
+  `WSEA` double,
+  `ESEA` double,
   `PNG` double,
   `SAM` double);
 
@@ -19,6 +20,6 @@ LOAD DATA LOCAL INFILE 'AlleleFreq-daf.tab' into table `Populations-AlleleFreq-d
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
         (
-		Num,Chr,Pos,SnpName,WAF,EAF,SAS,SEA,PNG,SAM
+		Num,Chr,Pos,SnpName,WAF,EAF,SAS,WSEA,ESEA,PNG,SAM
         );
 

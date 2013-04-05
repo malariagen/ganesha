@@ -11,7 +11,8 @@ CREATE TABLE `Populations-AlleleFreq-nraf` (
   `WAF` double,
   `EAF` double,
   `SAS` double,
-  `SEA` double,
+  `WSEA` double,
+  `ESEA` double,
   `PNG` double,
   `SAM` double);
 
@@ -20,7 +21,7 @@ LOAD DATA LOCAL INFILE 'AlleleFreq-nraf.tab' into table `Populations-AlleleFreq-
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
         (
-                Num,Chr,Pos,SnpName,Overall,WAF,EAF,SAS,SEA,PNG,SAM
+                Num,Chr,Pos,SnpName,Overall,WAF,EAF,SAS,WSEA,ESEA,PNG,SAM
         );
 
 
