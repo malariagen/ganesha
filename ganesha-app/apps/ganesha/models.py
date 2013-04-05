@@ -62,6 +62,7 @@ class ContactPerson(models.Model):
     contact_person = SlugField(primary_key=True)
     email = EmailField()
     name = CharField(max_length=100)
+    image = CharField(max_length=100)
     description = TextField()
     affiliations = ManyToManyField('Institute', through='Affiliation')
     def save(self, **kwargs):
