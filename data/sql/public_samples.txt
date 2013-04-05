@@ -1,0 +1,13 @@
+DROP TABLE IF EXISTS `public_samples`;
+CREATE TABLE `public_samples` (
+  `sample` varchar(200) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOAD DATA LOCAL INFILE 'public_samples.txt' into table `public_samples`
+        FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
+        LINES TERMINATED BY '\n'
+        IGNORE 1 LINES 
+        (
+		`sample`
+        );
+
