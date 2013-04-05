@@ -1,6 +1,12 @@
 . ./config.sh
 rm -rf Data
 python getFiles.py
+(cd Data/Pics
+rm images.csv
+for i in *
+do
+  echo `echo $i | sed -e 's/.jpg//'`,"images/$i" >> images.csv
+done)
 SQLDIR=${PWD}/sql
 (cd Data
  python ../convert-xlsx-to-csv.py sample_contexts.xlsx
