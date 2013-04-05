@@ -163,15 +163,13 @@ def insert_sample_classification_types():
     sample_classification_types = [
         {
             'name': 'Region',
-            'description': ''
-        },
-        {
-            'name': 'Country',
-            'description': ''
+            'description': 'Used for the calculation of genetic marker frequencies on a detailed geographical scale.',
+            'ordr': 2
         },
         {
             'name': 'SubCont',
-            'description': ''
+            'description': 'Used for the calculation of SNP allele frequencies.',
+            'ordr': 1
         }
     ]
     return dict((sstype['name'], post('sample_classification_type', sstype)) for sstype in sample_classification_types)
