@@ -1,8 +1,10 @@
 UPDATE sample_contexts sc LEFT JOIN sample_context_description scd ON sc.sample_context = scd.sample_context SET sc.description = scd.description;
 
-INSERT INTO sample_classifications (sample_classification, sample_classification_type_id) SELECT DISTINCT `Pop`, 'subcont' FROM SampleGroups WHERE `Pop` NOT IN (SELECT sample_classification FROM sample_classifications);
+INSERT INTO sample_classifications (sample_classification, sample_classification_type_id, name, lattit, longgit) 
+SELECT DISTINCT `Pop`, 'subcont', name, lattit, longit FROM SampleGroups sg LEFT JOIN `Definition-Populations` dp ON dp.ID = sg.`Pop` WHERE `Pop` NOT IN (SELECT sample_classification FROM sample_classifications);
 
-INSERT INTO sample_classifications (sample_classification, sample_classification_type_id) SELECT DISTINCT Country, 'region' FROM `metadata-2.2_withsites` WHERE Country NOT IN (SELECT sample_classification FROM sample_classifications);
+INSERT INTO sample_classifications (sample_classification, sample_classification_type_id, name, lattit, longgit) 
+SELECT DISTINCT Country, 'region', name, lattit, longit FROM `metadata-2.2_withsites` md LEFT JOIN `Definition-Regions` dr ON dr.ID = md.Country WHERE Exclude = 'FALSE';
 
 delete sample_classifications_samples from sample_classifications_samples LEFT JOIN sample_classifications ON sample_classifications_samples.sampleclassification_id = sample_classifications.sample_classification where sample_classification_type_id = 'subcont';
 
