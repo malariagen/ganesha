@@ -11,6 +11,6 @@ LOAD DATA LOCAL INFILE 'Definition-Regions.tab' into table `Definition-Regions`
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
         (
-		`ID`,`Name`,`longit`,`lattit`
+		`Name`,`ID`,`longit`,`lattit`
         );
 

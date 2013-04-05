@@ -11,6 +11,6 @@ LOAD DATA LOCAL INFILE 'Definition-Populations.tab' into table `Definition-Popul
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
         (
-		`ID`,`Name`,`longit`,`lattit`
+		`Name`,`ID`,`longit`,`lattit`
         );
 
