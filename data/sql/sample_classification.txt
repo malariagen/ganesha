@@ -4,8 +4,10 @@ CREATE TABLE `sample_classifications1` (
   `name` varchar(100) DEFAULT NULL,
   `sample_classification` varchar(50) NOT NULL,
   `sample_classification_type` varchar(50) DEFAULT NULL,
+  `lattit` double DEFAULT NULL,
   `longit` double DEFAULT NULL,
-  `lattit` double DEFAULT NULL
+  `geo_json` text,
+  PRIMARY KEY (`sample_classification`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOAD DATA LOCAL INFILE 'sample_classification.txt' into table `sample_classifications1`
@@ -13,6 +15,6 @@ LOAD DATA LOCAL INFILE 'sample_classification.txt' into table `sample_classifica
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
         (
-		ordr,name,sample_classification,sample_classification_type,longit,lattit
+		ordr,name,sample_classification,sample_classification_type,lattit,longit,geo_json
         );
 
