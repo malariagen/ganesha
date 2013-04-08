@@ -32,6 +32,7 @@ class Study(models.Model):
 class Location(models.Model):
     location = SlugField(primary_key=True)
     name = CharField(max_length=100)
+    description = CharField(max_length=100)
     longit = FloatField(null=True)
     lattit = FloatField(null=True)
     country = SlugField(choices=iso_countries.id_name_tuples)

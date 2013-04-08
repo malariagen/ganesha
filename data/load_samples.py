@@ -68,6 +68,7 @@ def insert_locations(location_file):
             'lattit': line['Latitude'],
             'longit': line['Longitude'],
             'country': line['Country'],
+            'description': line['Description']
         }
         location_URI_by_id[line['ID']] = post('location', location)
     return location_URI_by_id, location_desc_by_id
