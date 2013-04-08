@@ -167,7 +167,7 @@ def insert_sample_classification_types():
             'ordr': 2
         },
         {
-            'name': 'SubCont',
+            'name': 'Subcontinent',
             'description': 'Used for the calculation of SNP allele frequencies.',
             'ordr': 1
         }
