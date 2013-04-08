@@ -65,6 +65,7 @@ def insert_locations(location_file):
         location = {
             'location': line['ID'],
             'name': ' '.join(line['ID'].split('_')[1:]),
+            'name': line['Name'],
             'lattit': line['Latitude'],
             'longit': line['Longitude'],
             'country': line['Country'],
