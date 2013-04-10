@@ -115,7 +115,7 @@ class SampleClassificationType(models.Model):
     #FK from SampleClassification
     def save(self, **kwargs):
         if not self.sample_classification_type:
-            slugify.unique_slugify(self, self.name, slug_field_name='sample_classification_type')
+            slugify.unique_slugify(self, self.name[:7], slug_field_name='sample_classification_type')
         super(SampleClassificationType, self).save()
     def __unicode__(self):
         return self.name
