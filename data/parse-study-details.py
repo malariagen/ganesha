@@ -45,18 +45,22 @@ def contact_from_string(para):
   name = fields[0].strip()
   names = name.split(' ')
   lastName = ' '.join(names[1:])
+  firstName = names[0]
   email = ''
   if (len(fields) > 1):
     if ('@' in fields[1]):
       email=fields[1].strip()
+    elif len(fields) == 2:
+      lastName = fields[0].strip() 
+      firstName = fields[1].strip() 
     else:
       index = 1
   aff = ''
   if (len(fields) > index):
     aff = ','.join(fields[index:]).strip()
   contact = {
-    'name': lastName + ", " + names[0],
-    'firstName': names[0],
+    'name': lastName + ", " + firstName,
+    'firstName': firstName,
     'lastName': lastName,
     'email': email,
     'company': aff
