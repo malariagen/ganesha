@@ -15,6 +15,6 @@ LOAD DATA LOCAL INFILE 'sample_classification.txt' into table `sample_classifica
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
         (
-		ordr,name,sample_classification,sample_classification_type,lattit,longit,geo_json
+		ordr,name,sample_classification,sample_classification_type,longit,lattit,geo_json
         );
 
