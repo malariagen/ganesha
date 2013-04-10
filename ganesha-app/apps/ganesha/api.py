@@ -46,7 +46,7 @@ class InstituteResource(ModelResource):
 
 class AffiliationResource(ModelResource):
     institute = ForeignKeyInlineToggle(InstituteResource, 'institute')
-    #contact_person = ForeignKeyInlineToggle('ganesha.api.ContactPersonResource', 'institute')
+    contact_person = ForeignKeyInlineToggle('ganesha.api.ContactPersonResource', 'contact_person')
     class Meta:
         queryset = Affiliation.objects.select_related('institute').all()
         authentication = Authentication()
