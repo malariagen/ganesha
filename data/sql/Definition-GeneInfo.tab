@@ -3,6 +3,8 @@ DROP TABLE IF EXISTS `Definition-GeneInfo`;
 CREATE TABLE `Definition-GeneInfo` (
   `GeneName` varchar(20) DEFAULT NULL,
   `ordr` int(11) DEFAULT NULL,
+  `GeneId` varchar(200) DEFAULT NULL,
+  `Chromosome` varchar(200) DEFAULT NULL,
   `Description` varchar(200) DEFAULT NULL,
   `Comments` varchar(1000) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -13,6 +15,6 @@ LOAD DATA LOCAL INFILE 'Definition-GeneInfo.tab' into table `Definition-GeneInfo
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
         (
-		GeneName,ordr,Description,Comments
+		GeneName,ordr,GeneId,Chromosome,Description,Comments
         );
 
