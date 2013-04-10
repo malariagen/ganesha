@@ -2,7 +2,7 @@
 rm -rf Data
 python getFiles.py
 (cd Data/Pics
-rm images.csv
+test -f images.csv && rm images.csv
 for i in *
 do
   echo `echo $i | sed -e 's/.jpg//'`,"images/$i" >> images.csv
