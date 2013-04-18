@@ -105,14 +105,9 @@ def parse_contacts(study_contacts, contact_URI_by_name, contact_list, contact_ty
                      'affiliations': aff_list,
                      'description': '',
                      }
-          contact1 = post('contact_person', contact)
+          contact = post('contact_person', contact)
           contact_URI_by_name[name] = contact
-      new_contact = copy.deepcopy(contact)
-#      print contact['name']
-#      print contact_type
-#      print contact1
-#      new_contact['contact_type'] = contact_type
-      study_contacts.append(new_contact)
+      study_contacts.append(contact)
 
 def insert_studies(study_list, alfresco_json):
     #Find those studies and insert them
