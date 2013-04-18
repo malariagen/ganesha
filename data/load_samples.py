@@ -7,6 +7,7 @@ from django.template.defaultfilters import slugify
 from urlparse import urlparse
 import pprint
 import ganesha.util.iso_countries as iso_countries
+import copy
 
 HOST = 'http://localhost:8000'
 API = '/api/v1'
@@ -84,6 +85,34 @@ def list_wanted_studies(sample_metadata_file):
             wanted_legacy_studies.add(line['Study'])
     return wanted_legacy_studies
 
+def parse_contacts(study_contacts, contact_URI_by_name, contact_list, contact_type):
+
+  for af_contact in contact_list:
+      name = ' '.join([af_contact['firstName'], af_contact['lastName']])
+      #Some have no email so have to use name for unique key for now....
+      contact = contact_URI_by_name.get(name, None)
+      if contact is None:
+          affs = af_contact['company'].split(';')
+          aff_list = []
+          for aff in affs:
+            new_aff = {
+                       'institute': {'name': aff[:100]},
+                       'url': 'http://',
+                      }
+            aff_list.append(new_aff)
+          contact = {'name': name,
+                     'email': af_contact['email'],
+                     'affiliations': aff_list,
+                     'description': '',
+                     }
+          contact1 = post('contact_person', contact)
+          contact_URI_by_name[name] = contact
+      new_contact = copy.deepcopy(contact)
+#      print contact['name']
+#      print contact_type
+#      print contact1
+#      new_contact['contact_type'] = contact_type
+      study_contacts.append(new_contact)
 
 def insert_studies(study_list, alfresco_json):
     #Find those studies and insert them
@@ -95,39 +124,17 @@ def insert_studies(study_list, alfresco_json):
         for legacy_study in study_list:
             if legacy_study == af_study['intDescrip'] or legacy_study == af_study['intDescrip'].split(':')[0] or legacy_study == af_study['title'].split(' ')[0]:
                 study_contacts = []
-                for af_contact in af_study['primaryContacts']:
-                    name = ' '.join([af_contact['firstName'], af_contact['lastName']])
-                    #Some have no email so have to use name for unique key for now....
-                    contact = contact_URI_by_name.get(name, None)
-                    if contact is None:
-                        contact = {'name': name,
-                                   'email': af_contact['email'],
-                                   'affiliations': [
-                                       {
-                                           'institute': {'name': af_contact['company'][:100]},
-                                           'url': 'http://',
-                                       },
-                                   ],
-                                   'description': '',
-                                   }
-#                        affiliation = affiliation_URI_by_name.get(af_contact['company'][:100], None)
-#			if affiliation is None:
-#			   affiliation = {
-#                                           'name': af_contact['company'][:100],
-#                                           'institute': af_contact['company'][:50]
-#                                       }
-#                           affiliation = post('institute', affiliation)
-#                           affiliation_URI_by_name[af_contact['company'][:100]] = affiliation
-                        contact = post('contact_person', contact)
-                        contact_URI_by_name[name] = contact
-                    study_contacts.append(contact)
+                other_contacts = []
+                parse_contacts(study_contacts, contact_URI_by_name, af_study['primaryContacts'], 'lead')
+                parse_contacts(other_contacts, contact_URI_by_name, af_study['contacts'], 'key')
                 study = {'study': af_study['name'],
                          'title': af_study['title'].split(' - ')[-1],
                          'legacy_name': legacy_study,
                          'description': af_study['description'],
                          'alfresco_node': af_study['nodeRef'],
                          'people': '',
-                         'contact_persons': study_contacts
+                         'contact_persons': study_contacts,
+                         'other_persons': other_contacts
                 }
                 study_URI_by_legacy_name[legacy_study] = post('study', study)
     return study_URI_by_legacy_name
