@@ -1,0 +1,25 @@
+DROP TABLE IF EXISTS `SitesInfo`;
+
+CREATE TABLE `SitesInfo` (
+  `ID` varchar(50) NOT NULL,
+  `Latitude` double DEFAULT NULL,
+  `Longitude` double DEFAULT NULL,
+  `GeoCode` varchar(100) NOT NULL,
+  `Name` varchar(100) NOT NULL,
+  `Country` varchar(50) NOT NULL,
+  `SubCont` varchar(50) NOT NULL,
+  `Description` varchar(255) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `locations_f5618512` (`Country`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+LOAD DATA LOCAL INFILE 'SitesInfo.txt' into table `SitesInfo`
+        FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
+        LINES TERMINATED BY '\n'
+        IGNORE 1 LINES 
+        (
+                ID,Latitude,Longitude,GeoCode,Name,Country,SubCont,Description
+        );
+
+CREATE OR REPLACE VIEW `location` AS SELECT ID as location, Name as name, Description as description, Longitude as longit, Latitude as lattit, Country as country FROM SitesInfo;
