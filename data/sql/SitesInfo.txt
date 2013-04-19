@@ -15,7 +15,7 @@ CREATE TABLE `SitesInfo` (
 
 
 LOAD DATA LOCAL INFILE 'SitesInfo.txt' into table `SitesInfo`
-        FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
+        FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
         (
