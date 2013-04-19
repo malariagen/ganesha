@@ -1,4 +1,6 @@
 . ./config.sh
+sed -e "s/=/='/" -e "s/$/'/" -e "s/^'//" config.sh > config.py
+echo "DBSRV='localhost'" >> config.py
 rm -rf Data
 python getFiles.py
 (cd Data/Pics
@@ -16,7 +18,7 @@ mkdir Output
 PYTHONPATH=../../../../PfPopGenWeb/ExternalResources/ImportScripts/
 export PYTHONPATH
 python ${PYTHONPATH}ConvertResistanceMarkerData.py
-#Don't use as it takes too much memory and gets killed
+#Do not use as it takes too much memory and gets killed
 #python ${PYTHONPATH}ConvertVariantCatalog.py
 )
 (cd Data
@@ -65,6 +67,7 @@ do
 		echo "Error loading:"${i}
 	fi
 done
-PYTHONPATH=../../mikemaccana-python-docx-543d305/:../ganesha-app/apps
-export PYTHONPATH
-python ./parse-study-details.py Data/Partner\ study\ short\ descriptions.docx Data/study_descriptions_index.csv doc.json
+#PYTHONPATH=../../mikemaccana-python-docx-543d305/:../ganesha-app/apps
+#export PYTHONPATH
+#python ./parse-study-details.py Data/Partner\ study\ short\ descriptions.docx Data/study_descriptions_index.csv doc.json
+python load_studies.py
