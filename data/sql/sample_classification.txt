@@ -1,3 +1,15 @@
+
+DROP TABLE IF EXISTS `sample_classification_type`;
+CREATE TABLE `sample_classification_type` (
+  `sample_classification_type` varchar(50) DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `ordr` int(11),
+  PRIMARY KEY (`sample_classification_type`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO sample_classification_type (sample_classification_type,`name`,`description`,ordr) VALUES ('region', 'Region', 'Used for the calculation of genetic marker frequencies on a detailed geographical scale.', 2 ), ( 'subcont'     , 'Subcontinent' , 'Used for the calculation of SNP allele frequencies.', 1 ); 
+
 DROP TABLE IF EXISTS `sample_classifications`;
 CREATE TABLE `sample_classifications` (
   `ordr` int(11),
