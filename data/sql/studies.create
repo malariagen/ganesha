@@ -7,9 +7,11 @@ DROP TABLE IF EXISTS `studies`;
 CREATE TABLE `studies` (
   `study` varchar(50) NOT NULL,
   `title` varchar(200) NOT NULL,
+  `study_code` int(11) NOT NULL,
   `legacy_name` varchar(20) NOT NULL,
   `description` longtext NOT NULL,
-  `web_study` varchar(50) NOT NULL,
+  `web_study_code` varchar(50) NOT NULL,
+  `web_study_legacy_name` varchar(20) NOT NULL,
   `alfresco_node` varchar(255) NOT NULL,
   PRIMARY KEY (`study`),
   KEY `studies_69ba38d1` (`legacy_name`)

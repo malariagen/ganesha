@@ -32,8 +32,8 @@ def insert_studies_contact_person(c, insertValues):
 
 def insert_study(c, insertValues):
     c.executemany(
-      """INSERT IGNORE INTO studies (`study`, `title`, `legacy_name`, `description`, `alfresco_node`, `web_study`)
-      VALUES (%s, %s, %s, %s, %s, %s)""",insertValues)
+      """INSERT IGNORE INTO studies (`study`, `title`, `study_code`, `legacy_name`, `description`, `alfresco_node`, `web_study_code`, `web_study_legacy_name`)
+      VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",insertValues)
 
 def parse_contacts(c, study_contacts, study_id, contact_list, contact_type):
 
@@ -65,14 +65,17 @@ def insert_studies(c, alfresco_json):
     study_URI_by_legacy_name = {}
     af = json.load(open(alfresco_json))
     for af_study in af['collaborationNodes']:
-                study_id = af_study['name'].split('-')[0]
+                study_id = af_study['name']
+                study_code = af_study['name'].split('-')[0]
                 study_contacts = []
                 other_contacts = []
                 studies = []
                 web_study = ''
+                web_study_legacy = ''
                 if 'webStudy' in af_study:
-                  web_study = af_study['webStudy']['name'].split('-')[0]
-                study = study_id, af_study['webTitle'],af_study['legacyID'],af_study['description'],af_study['nodeRef'],web_study
+                  web_study = af_study['webStudy']['name']
+                  web_study_legacy = af_study['webStudy']['legacyID']
+                study = study_id, af_study['webTitle'],study_code,af_study['legacyID'],af_study['description'],af_study['nodeRef'],web_study,web_study_legacy
                 studies.append(study)
                 insert_study(c, studies)
                 parse_contacts(c, study_contacts, study_id, af_study['primaryContacts'], 'lead')
