@@ -58,6 +58,16 @@ mysql --local-infile=1 -u ${DBUSER} -p${DBPASS} ${DB} < ${LOAD}
 	fi
 done
 )
+for i in ${SQLDIR}/*.create
+do
+	echo $i
+	mysql -u ${DBUSER} -p${DBPASS} ${DB} < ${i}
+	if [ $? -ne 0 ]
+	then
+		echo "Error loading:"${i}
+	fi
+done
+python load_studies.py
 for i in ${SQLDIR}/*.sql
 do
 	echo $i
@@ -70,4 +80,3 @@ done
 #PYTHONPATH=../../mikemaccana-python-docx-543d305/:../ganesha-app/apps
 #export PYTHONPATH
 #python ./parse-study-details.py Data/Partner\ study\ short\ descriptions.docx Data/study_descriptions_index.csv doc.json
-python load_studies.py
