@@ -25,7 +25,7 @@ def insert_contact_person(c, insertValues):
       """INSERT IGNORE INTO contact_persons (`contact_person`, `email`, `name`)
       VALUES (%s, %s, %s)""",insertValues)
 
-def insert_publication(c, insertValues):
+def insert_publications(c, insertValues):
     c.executemany(
       """INSERT IGNORE INTO publications (`doi`, `pmid`, `citation`, `pub_id`)
       VALUES (%s, %s, %s, %s)""",insertValues)
@@ -70,7 +70,7 @@ def parse_contacts(c, study_contacts, study_id, contact_list, contact_type):
 
 def parse_publications(c, study_publications, study_id, pub_list):
 
-  for af_pub in pub_list:
+  for pub in pub_list:
           pub_id = pub['nodeRef'][25:]
           pub = pub['doi'],pub['pmid'],pub['citation'],pub_id
           pubs = []
