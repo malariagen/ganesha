@@ -25,10 +25,20 @@ def insert_contact_person(c, insertValues):
       """INSERT IGNORE INTO contact_persons (`contact_person`, `email`, `name`)
       VALUES (%s, %s, %s)""",insertValues)
 
+def insert_publication(c, insertValues):
+    c.executemany(
+      """INSERT IGNORE INTO publications (`doi`, `pmid`, `citation`, `pub_id`)
+      VALUES (%s, %s, %s, %s)""",insertValues)
+
 def insert_studies_contact_person(c, insertValues):
     c.executemany(
       """INSERT IGNORE INTO studies_contact_persons (`study_id`, `contactperson_id`, `contact_type`)
       VALUES (%s, %s, %s)""",insertValues)
+
+def insert_studies_publications(c, insertValues):
+    c.executemany(
+      """INSERT IGNORE INTO studies_publications (`study_id`, `pub_id`)
+      VALUES (%s, %s)""",insertValues)
 
 def insert_study(c, insertValues):
     c.executemany(
@@ -58,6 +68,19 @@ def parse_contacts(c, study_contacts, study_id, contact_list, contact_type):
           scps.append(scp)
           insert_studies_contact_person(c, scps)
 
+def parse_publications(c, study_publications, study_id, pub_list):
+
+  for af_pub in pub_list:
+          pub_id = pub['nodeRef'][25:]
+          pub = pub['doi'],pub['pmid'],pub['citation'],pub_id
+          pubs = []
+          pubs.append(pub)
+          insert_publications(c, pubs)
+          scp = study_id, pub_id
+          scps = []
+          scps.append(scp)
+          insert_studies_publications(c, scps)
+
 def insert_studies(c, alfresco_json):
     #Find those studies and insert them
     contact_URI_by_name = {}
@@ -68,7 +91,9 @@ def insert_studies(c, alfresco_json):
                 study_id = af_study['name']
                 study_code = af_study['name'].split('-')[0]
                 study_contacts = []
+                associates_contacts = []
                 other_contacts = []
+                publications = []
                 studies = []
                 web_study = ''
                 web_study_legacy = ''
@@ -79,7 +104,9 @@ def insert_studies(c, alfresco_json):
                 studies.append(study)
                 insert_study(c, studies)
                 parse_contacts(c, study_contacts, study_id, af_study['primaryContacts'], 'lead')
-                parse_contacts(c, other_contacts, study_id, af_study['contacts'], 'key')
+                parse_contacts(c, associates_contacts, study_id, af_study['associates'], 'key')
+                parse_contacts(c, other_contacts, study_id, af_study['contacts'], 'contact')
+                parse_publications(c, publications, study_id, af_study['publications'])
     return study_URI_by_legacy_name
 
 db=MySQLdb.connect(host=config.DBSRV, user=config.DBUSER, passwd=config.DBPASS, db=config.DB, charset='utf8')

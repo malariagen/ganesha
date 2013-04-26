@@ -76,3 +76,23 @@ CREATE TABLE `affiliations` (
   CONSTRAINT `contact_person_id_refs_contact_person_5a39adaa` FOREIGN KEY (`contact_person_id`) REFERENCES `contact_persons` (`contact_person`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `publications`;
+CREATE TABLE `publications` (
+  `pub_id` varchar(100) NOT NULL,
+  `doi` varchar(100) NOT NULL,
+  `pmid` int(11) NOT NULL,
+  `citation` text NOT NULL,
+  PRIMARY KEY (`pub_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `studies_publications`;
+CREATE TABLE `studies_publications` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `study_id` varchar(50) NOT NULL,
+  `pub_id` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `studies_publications_da5fc7d6` (`study_id`),
+  KEY `studies_publications_164fb53e` (`pub_id`),
+  CONSTRAINT `study_id_refs_study` FOREIGN KEY (`study_id`) REFERENCES `studies` (`study`),
+  CONSTRAINT `pub_id_refs_publication_4427ed1b` FOREIGN KEY (`pub_id`) REFERENCES `publications` (`pub_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
