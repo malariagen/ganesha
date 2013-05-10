@@ -7,7 +7,6 @@ CREATE TABLE `images` (
 LOAD DATA LOCAL INFILE 'images.csv' into table `images`
         FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
         LINES TERMINATED BY '\n'
-        IGNORE 1 LINES 
         (
 		`name`,`url`
         );
