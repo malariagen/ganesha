@@ -77,6 +77,7 @@ do
 		echo "Error loading:"${i}
 	fi
 done
+python addPublicationMetaData.py
 #PYTHONPATH=../../mikemaccana-python-docx-543d305/:../ganesha-app/apps
 #export PYTHONPATH
 #python ./parse-study-details.py Data/Partner\ study\ short\ descriptions.docx Data/study_descriptions_index.csv doc.json

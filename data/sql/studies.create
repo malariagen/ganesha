@@ -82,6 +82,7 @@ CREATE TABLE `publications` (
   `doi` varchar(100) NOT NULL,
   `pmid` int(11) NOT NULL,
   `citation` text NOT NULL,
+  `dateCreated` DATE,
   PRIMARY KEY (`pub_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
