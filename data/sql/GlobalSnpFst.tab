@@ -1,0 +1,20 @@
+
+
+DROP TABLE IF EXISTS `GlobalSnpFst`;
+
+CREATE TABLE `GlobalSnpFst` (
+  `Num` varchar(10) DEFAULT NULL,
+  `Chr` int(11) DEFAULT NULL,
+  `Pos` int(11) DEFAULT NULL,
+  `SnpName` varchar(20) DEFAULT NULL,
+  `UnweightedFst` double,
+  `WeightedFst` double);
+
+LOAD DATA LOCAL INFILE 'GlobalSnpFst.tab' into table `GlobalSnpFst`
+        FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
+        LINES TERMINATED BY '\n'
+        IGNORE 1 LINES 
+        (
+		Num,Chr,Pos,SnpName,UnweightedFst,WeightedFst
+        );
+
