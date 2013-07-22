@@ -1,13 +1,13 @@
 
-DROP TABLE IF EXISTS `SampleGroups`;
-CREATE TABLE `SampleGroups` (
+DROP TABLE IF EXISTS `Regions-SampleGroups`;
+CREATE TABLE `Regions-SampleGroups` (
   `Sample` varchar(20) DEFAULT NULL,
   `Group` varchar(20) DEFAULT NULL,
   `Pop` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-LOAD DATA LOCAL INFILE 'SampleGroups.tab' into table `SampleGroups`
+LOAD DATA LOCAL INFILE 'Regions-SampleGroups.tab' into table `Regions-SampleGroups`
         FIELDS TERMINATED BY '\t' OPTIONALLY ENCLOSED BY '"' ESCAPED BY '"'
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
