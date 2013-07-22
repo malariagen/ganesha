@@ -7,7 +7,8 @@ CREATE TABLE `Populations-AlleleFreq-maf` (
   `Chr` int(11) DEFAULT NULL,
   `Pos` int(11) DEFAULT NULL,
   `SnpName` varchar(20) DEFAULT NULL,
-  `Overall` varchar(20) DEFAULT NULL,
+  `Overall` double,
+  `Global` double,
   `WAF` double,
   `EAF` double,
   `SAS` double,
@@ -21,7 +22,7 @@ LOAD DATA LOCAL INFILE 'AlleleFreq-maf.tab' into table `Populations-AlleleFreq-m
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES 
         (
-		Num,Chr,Pos,SnpName,Overall,WAF,EAF,SAS,WSEA,ESEA,PNG,SAM
+		Num,Chr,Pos,SnpName,Overall,Global,WAF,EAF,SAS,WSEA,ESEA,PNG,SAM
         );
 
 
