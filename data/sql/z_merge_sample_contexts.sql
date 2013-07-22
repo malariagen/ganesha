@@ -16,7 +16,7 @@ CREATE TABLE `sample_classifications_samples` (
 
 delete sample_classifications_samples from sample_classifications_samples LEFT JOIN sample_classifications ON sample_classifications_samples.sampleclassification_id = sample_classifications.sample_classification where sample_classification_type = 'subcont';
 
-insert into sample_classifications_samples (sampleclassification_id, sample_id) SELECT `Pop`, Sample FROM Populations-SampleGroups;
+insert into sample_classifications_samples (sampleclassification_id, sample_id) SELECT `Pop`, Sample FROM `Populations-SampleGroups`;
 
 delete sample_classifications_samples from sample_classifications_samples LEFT JOIN sample_classifications ON sample_classifications_samples.sampleclassification_id = sample_classifications.sample_classification where sample_classification_type = 'region';
 
